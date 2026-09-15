@@ -1,0 +1,3946 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Mushibat Healthcare | Book Hospital Appointments in Bihar
+      (Darbhanga, Samastipur, Madhubani, Sitamarhi)
+    </title>
+    <meta
+      name="description"
+      content="Book hospital appointments across Bihar in minutes. Search hospitals and doctors in Darbhanga, Samastipur, Madhubani, and Sitamarhi. Compare ratings, book instantly, pay securely, and skip long queues."
+    />
+    <meta
+      name="keywords"
+      content="Mushibat Healthcare, Darbhanga hospitals, DMCH Darbhanga, AIIMS Darbhanga, Samastipur hospitals, Madhubani hospitals, Sitamarhi hospitals, doctor appointment Bihar, Mithila healthcare"
+    />
+
+    <!-- Compiled Tailwind CSS -->
+   <link rel="stylesheet" href="index.css">
+
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- jsPDF CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  </head>
+  <body
+    class="font-sans bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 antialiased selection:bg-sky-500 selection:text-white"
+  >
+    <!-- 1. Loading Screen -->
+    <div
+      id="loading-screen"
+      class="fixed inset-0 z-9999 flex items-center justify-center bg-white dark:bg-slate-950 transition-all duration-500"
+    >
+      <div class="flex flex-col items-center gap-4">
+        <div class="spinner"></div>
+        <div class="flex items-center gap-2">
+          <span
+            class="w-8 h-8 rounded-xl bg-gradient-to-tr from-sky-600 to-emerald-500 flex items-center justify-center text-white font-bold font-serif text-lg"
+            >M</span
+          >
+          <div
+            class="text-2xl font-bold font-serif text-sky-600 dark:text-sky-400 tracking-tight"
+          >
+            Mushibat Healthcare
+          </div>
+        </div>
+        <p class="text-xs font-medium text-slate-400 tracking-widest uppercase">
+          Bihar • Mithila Region
+        </p>
+      </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div
+      id="toast-container"
+      class="fixed bottom-6 right-6 z-9999 flex flex-col gap-3 max-w-sm w-full pointer-events-none"
+    ></div>
+
+    <!-- App-Style Welcome & Login Gatekeeper Screen -->
+    <div id="app-welcome-screen" class="hidden">
+      <div class="app-screen-card p-6 sm:p-8 flex flex-col text-center relative">
+        <!-- Top App Bar / Brand Header -->
+        <div class="flex flex-col items-center mb-6">
+          <div class="relative mb-3.5">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-sky-600 via-sky-500 to-emerald-500 flex items-center justify-center text-white font-extrabold text-2xl shadow-xl shadow-sky-600/30">
+              M
+            </div>
+            <span class="absolute -bottom-1 -right-1 flex h-4 w-4">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-white dark:border-slate-900"></span>
+            </span>
+          </div>
+          <h1 class="font-serif text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-sky-600 via-sky-500 to-emerald-600 bg-clip-text text-transparent">
+            Welcome to Mushibat Healthcare
+          </h1>
+          <p class="text-sm font-semibold text-slate-600 dark:text-slate-300 mt-1.5">
+            Your trusted healthcare partner
+          </p>
+        </div>
+
+        <!-- Step 1: Input Mobile or Email -->
+        <div id="gate-input-step" class="space-y-4 text-left">
+          <!-- Switcher Tabs -->
+          <div class="flex p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl text-xs font-bold">
+            <button
+              type="button"
+              id="gate-tab-mobile"
+              class="flex-1 py-2.5 rounded-lg bg-white dark:bg-slate-700 text-sky-600 dark:text-sky-400 shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <i data-lucide="phone" class="w-3.5 h-3.5"></i> Mobile Number
+            </button>
+            <button
+              type="button"
+              id="gate-tab-email"
+              class="flex-1 py-2.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <i data-lucide="mail" class="w-3.5 h-3.5"></i> Email Address
+            </button>
+          </div>
+
+          <!-- Mobile Input Field -->
+          <div id="gate-mobile-wrapper" class="space-y-1.5">
+            <label for="gate-mobile-input" class="block text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
+              Enter Mobile Number
+            </label>
+            <div class="relative">
+              <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">+91</span>
+              <input
+                type="tel"
+                id="gate-mobile-input"
+                maxlength="10"
+                placeholder="98765 43210"
+                class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl pl-12 pr-4 py-3 text-sm text-slate-900 dark:text-slate-100 font-semibold tracking-wider focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
+              />
+            </div>
+          </div>
+
+          <!-- Email Input Field (Hidden by default) -->
+          <div id="gate-email-wrapper" class="space-y-1.5 hidden">
+            <label for="gate-email-input" class="block text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
+              Enter Email Address
+            </label>
+            <div class="relative">
+              <i data-lucide="mail" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4"></i>
+              <input
+                type="email"
+                id="gate-email-input"
+                placeholder="patient@example.com"
+                class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
+              />
+            </div>
+          </div>
+
+          <!-- Send OTP Button -->
+          <button
+            type="button"
+            id="gate-send-otp-btn"
+            class="w-full mt-2 bg-gradient-to-r from-sky-600 to-emerald-600 hover:from-sky-700 hover:to-emerald-700 text-white font-bold py-3.5 rounded-xl text-sm transition-all shadow-lg shadow-sky-600/25 flex items-center justify-center gap-2 cursor-pointer transform hover:-translate-y-0.5 active:translate-y-0"
+          >
+            <span>Send Secure OTP</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Step 2: OTP Verification Step (Hidden by default) -->
+        <div id="gate-otp-step" class="space-y-5 text-left hidden">
+          <div class="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 rounded-xl flex items-center justify-between text-xs">
+            <div class="flex items-center gap-2 text-emerald-800 dark:text-emerald-300 font-semibold">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
+              <span>OTP Sent to <strong id="gate-target-display" class="font-bold"></strong></span>
+            </div>
+            <button type="button" id="gate-change-target-btn" class="text-xs font-bold text-sky-600 hover:underline">
+              Edit
+            </button>
+          </div>
+
+          <!-- Development OTP Quick-Helper Banner -->
+          <div class="p-2.5 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 rounded-xl text-[11px] text-amber-800 dark:text-amber-300 flex items-center justify-between">
+            <div class="flex items-center gap-1.5">
+              <span class="text-sm">🔑</span>
+              <span>Dev Demo OTP: <strong id="gate-demo-otp-code" class="font-mono font-bold text-xs text-amber-900 dark:text-amber-200">1234</strong></span>
+            </div>
+            <button type="button" id="gate-autofill-otp-btn" class="px-2 py-0.5 rounded bg-amber-200/60 dark:bg-amber-800/50 text-[10px] font-bold text-amber-900 dark:text-amber-200 hover:bg-amber-300 transition-colors">
+              Auto-Fill
+            </button>
+          </div>
+
+          <!-- OTP Input Boxes -->
+          <div>
+            <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-wider text-center">
+              Enter 4-Digit Verification Code
+            </label>
+            <div class="flex items-center justify-center gap-3">
+              <input type="text" maxlength="1" class="otp-digit-input" data-index="0" inputmode="numeric" />
+              <input type="text" maxlength="1" class="otp-digit-input" data-index="1" inputmode="numeric" />
+              <input type="text" maxlength="1" class="otp-digit-input" data-index="2" inputmode="numeric" />
+              <input type="text" maxlength="1" class="otp-digit-input" data-index="3" inputmode="numeric" />
+            </div>
+          </div>
+
+          <!-- Resend Timer -->
+          <div class="flex justify-between items-center text-xs text-slate-500 font-medium">
+            <span>Didn't receive code?</span>
+            <button type="button" id="gate-resend-btn" class="text-sky-600 font-bold hover:underline disabled:opacity-40 disabled:no-underline" disabled>
+              Resend (<span id="gate-timer-sec">30</span>s)
+            </button>
+          </div>
+
+          <!-- Verify and Unlock Button -->
+          <button
+            type="button"
+            id="gate-verify-otp-btn"
+            class="w-full bg-gradient-to-r from-sky-600 to-emerald-600 hover:from-sky-700 hover:to-emerald-700 text-white font-bold py-3.5 rounded-xl text-sm transition-all shadow-lg shadow-sky-600/25 flex items-center justify-center gap-2 cursor-pointer transform hover:-translate-y-0.5"
+          >
+            <i data-lucide="lock-open" class="w-4 h-4"></i>
+            <span>Verify &amp; Enter Portal</span>
+          </button>
+        </div>
+
+        <!-- Security Footer -->
+        <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400 flex items-center justify-center gap-2">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-500"></i>
+          <span>HIPAA &amp; Ayushman Bharat Verified Portal</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Sticky Glassmorphic Navbar -->
+    <nav
+      id="navbar"
+      class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent glass-nav"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20">
+          <!-- Logo -->
+          <a href="#home" class="flex-shrink-0 flex items-center gap-2.5 group">
+            <div
+              class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 via-sky-500 to-emerald-500 flex items-center justify-center text-white font-extrabold text-xl shadow-md shadow-sky-600/20 group-hover:scale-105 transition-transform"
+            >
+              M
+            </div>
+            <div class="flex flex-col text-left">
+              <span
+                class="font-serif text-2xl font-bold tracking-tight bg-gradient-to-r from-sky-600 via-sky-500 to-emerald-600 bg-clip-text text-transparent"
+              >
+                Mushibat
+              </span>
+              <span
+                class="text-[10px] font-semibold tracking-widest uppercase text-slate-400 dark:text-slate-500 -mt-1"
+                >Healthcare Bihar</span
+              >
+            </div>
+          </a>
+
+          <!-- Desktop Navigation Links -->
+          <div class="hidden lg:flex items-center gap-7">
+            <a
+              href="#home"
+              class="text-sm font-semibold text-sky-600 dark:text-sky-400 hover:text-sky-600 transition-colors"
+              >Home</a
+            >
+            <a
+              href="#districts"
+              class="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+              >Districts</a
+            >
+            <a
+              href="#hospitals"
+              class="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+              >Hospitals</a
+            >
+            <a
+              href="#doctors"
+              class="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+              >Doctors</a
+            >
+            <a
+              href="#specialties"
+              class="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+              >Specialties</a
+            >
+            <a
+              href="#services"
+              class="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+              >Services</a
+            >
+            <a
+              href="#about"
+              class="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+              >About</a
+            >
+            <a
+              href="#contact"
+              class="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+              >Contact</a
+            >
+          </div>
+
+          <!-- Action Buttons + Theme Toggle -->
+          <div class="hidden md:flex items-center gap-3">
+            <!-- Theme Toggle -->
+            <button
+              id="dark-mode-toggle"
+              class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-sm cursor-pointer"
+              aria-label="Toggle Dark Mode"
+            >
+              <i
+                id="light-icon"
+                data-lucide="sun"
+                class="w-5 h-5 text-amber-500 hidden"
+              ></i>
+              <i
+                id="dark-icon"
+                data-lucide="moon"
+                class="w-5 h-5 text-sky-600"
+              ></i>
+            </button>
+
+            <button
+              class="login-modal-btn text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors px-4 py-2 cursor-pointer"
+            >
+              Login
+            </button>
+            <button
+              class="register-modal-btn bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-sky-600/20 transition-all transform hover:-translate-y-0.5 cursor-pointer"
+            >
+              Register
+            </button>
+          </div>
+
+          <!-- Mobile Menu Toggle Button -->
+          <div class="flex items-center lg:hidden gap-2">
+            <button
+              id="dark-mode-toggle-mobile"
+              class="p-2 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              aria-label="Toggle Dark Mode Mobile"
+            >
+              <i
+                data-lucide="moon"
+                class="w-5 h-5 dark:hidden text-sky-600"
+              ></i>
+              <i
+                data-lucide="sun"
+                class="w-5 h-5 hidden dark:block text-amber-400"
+              ></i>
+            </button>
+            <button
+              id="mobile-menu-btn"
+              class="p-2 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              aria-label="Open Menu"
+            >
+              <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Navigation Menu -->
+      <div
+        id="mobile-menu"
+        class="hidden lg:hidden flex-col bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-5 py-5 space-y-3 shadow-xl transition-all"
+      >
+        <a
+          href="#home"
+          class="text-base font-semibold text-sky-600 py-2.5 px-3 rounded-xl hover:bg-sky-50 dark:hover:bg-slate-800"
+          >Home</a
+        >
+        <a
+          href="#districts"
+          class="text-base font-medium text-slate-700 dark:text-slate-300 py-2.5 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-sky-600"
+          >Districts</a
+        >
+        <a
+          href="#hospitals"
+          class="text-base font-medium text-slate-700 dark:text-slate-300 py-2.5 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-sky-600"
+          >Hospitals</a
+        >
+        <a
+          href="#doctors"
+          class="text-base font-medium text-slate-700 dark:text-slate-300 py-2.5 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-sky-600"
+          >Doctors</a
+        >
+        <a
+          href="#specialties"
+          class="text-base font-medium text-slate-700 dark:text-slate-300 py-2.5 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-sky-600"
+          >Specialties</a
+        >
+        <a
+          href="#services"
+          class="text-base font-medium text-slate-700 dark:text-slate-300 py-2.5 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-sky-600"
+          >Services</a
+        >
+        <a
+          href="#about"
+          class="text-base font-medium text-slate-700 dark:text-slate-300 py-2.5 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-sky-600"
+          >About</a
+        >
+        <a
+          href="#contact"
+          class="text-base font-medium text-slate-700 dark:text-slate-300 py-2.5 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-sky-600"
+          >Contact</a
+        >
+        <div class="h-px bg-slate-200 dark:bg-slate-800 my-2"></div>
+        <div class="flex items-center gap-3 pt-2">
+          <button
+            class="login-modal-btn flex-1 text-center text-sm font-semibold text-slate-700 dark:text-slate-300 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800"
+          >
+            Login
+          </button>
+          <button
+            class="register-modal-btn flex-1 text-center text-sm font-semibold bg-sky-600 text-white py-2.5 rounded-xl shadow-md shadow-sky-600/20 hover:bg-sky-700"
+          >
+            Register
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- 3. Hero Section -->
+    <section
+      id="home"
+      class="relative pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden bg-gradient-to-b from-sky-100/50 via-white to-slate-50 dark:from-slate-900/60 dark:via-slate-950 dark:to-slate-950"
+    >
+      <!-- Blur Orbs background -->
+      <div
+        class="absolute top-10 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 pointer-events-none opacity-30 dark:opacity-20 blur-3xl"
+      >
+        <div
+          class="absolute top-10 left-10 w-96 h-96 rounded-full bg-sky-400 animate-float"
+        ></div>
+        <div
+          class="absolute top-20 right-10 w-80 h-80 rounded-full bg-emerald-400"
+          style="animation-delay: 2s"
+        ></div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="grid lg:grid-cols-12 gap-12 items-center">
+          <!-- Text Hero & Badges -->
+          <div
+            class="lg:col-span-7 flex flex-col items-start text-left reveal-left"
+          >
+            <!-- Regional Badge -->
+            <div
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sky-100 dark:bg-slate-800/90 text-sky-800 dark:text-sky-300 text-xs sm:text-sm font-bold mb-6 shadow-sm border border-sky-200 dark:border-slate-700"
+            >
+              <span
+                class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"
+              ></span>
+              <span
+                >📍 Bihar (Mithila Region) First Online Care Network</span
+              >
+            </div>
+
+            <h1
+              class="font-serif text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight text-slate-900 dark:text-white mb-6 tracking-tight"
+            >
+              Book Hospital Appointments Across
+              <span
+                class="bg-gradient-to-r from-sky-600 via-teal-600 to-emerald-600 bg-clip-text text-transparent"
+                >Bihar</span
+              >
+              in Minutes
+            </h1>
+
+            <p
+              class="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed mb-8 max-w-2xl"
+            >
+              Search hospitals and doctors in
+              <strong class="text-slate-900 dark:text-white font-semibold"
+                >Darbhanga, Samastipur, Madhubani, and Sitamarhi</strong
+              >. Compare ratings, book appointments instantly, make secure
+              online payments, and skip long waiting queues.
+            </p>
+
+            <!-- Supported Districts Pills Display -->
+            <div
+              class="mb-8 p-3 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 backdrop-blur-sm w-full max-w-xl"
+            >
+              <div
+                class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2 flex items-center gap-1.5"
+              >
+                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-sky-600"></i>
+                Supported Districts Display
+              </div>
+              <div
+                class="flex items-center justify-between text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 whitespace-nowrap overflow-x-auto scrollbar-none gap-2"
+              >
+                <span
+                  class="px-2.5 py-1.5 rounded-xl bg-sky-50 dark:bg-slate-800 text-sky-700 dark:text-sky-300 border border-sky-100 dark:border-slate-700 flex items-center gap-1"
+                  >📍 Darbhanga</span
+                >
+                <span
+                  class="px-2.5 py-1.5 rounded-xl bg-emerald-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-slate-700 flex items-center gap-1"
+                  >📍 Samastipur</span
+                >
+                <span
+                  class="px-2.5 py-1.5 rounded-xl bg-amber-50 dark:bg-slate-800 text-amber-700 dark:text-amber-300 border border-amber-100 dark:border-slate-700 flex items-center gap-1"
+                  >📍 Madhubani</span
+                >
+                <span
+                  class="px-2.5 py-1.5 rounded-xl bg-purple-50 dark:bg-slate-800 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-slate-700 flex items-center gap-1"
+                  >📍 Sitamarhi</span
+                >
+              </div>
+            </div>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-wrap gap-4 mb-10 w-full sm:w-auto">
+              <button
+                class="book-btn w-full sm:w-auto bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800 text-white px-8 py-4 rounded-xl font-bold text-base shadow-lg shadow-sky-600/25 hover:shadow-xl hover:shadow-sky-600/35 transition-all transform hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2"
+                data-name="Hospital Appointment"
+              >
+                <i data-lucide="calendar" class="w-5 h-5"></i> Book Appointment
+              </button>
+              <a
+                href="#hospitals"
+                class="w-full sm:w-auto border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur text-slate-800 dark:text-white px-8 py-4 rounded-xl font-semibold text-base shadow-sm hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center justify-center gap-2"
+              >
+                Explore Hospitals
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </a>
+            </div>
+
+            <!-- Stats Quick View -->
+            <div
+              class="grid grid-cols-3 gap-6 sm:gap-10 border-t border-slate-200 dark:border-slate-800/80 pt-8 w-full max-w-lg"
+            >
+              <div>
+                <div
+                  class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white font-serif"
+                >
+                  120+
+                </div>
+                <div
+                  class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium"
+                >
+                  Bihar Hospitals
+                </div>
+              </div>
+              <div>
+                <div
+                  class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white font-serif"
+                >
+                  450+
+                </div>
+                <div
+                  class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium"
+                >
+                  Expert Doctors
+                </div>
+              </div>
+              <div>
+                <div
+                  class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white font-serif"
+                >
+                  25k+
+                </div>
+                <div
+                  class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium"
+                >
+                  Mithila Patients
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Illustration / Hero Media Panel -->
+          <div class="lg:col-span-5 relative reveal-right">
+            <!-- Glass Card Overlays -->
+            <div
+              class="absolute -top-6 -left-4 z-10 glass-panel p-4 rounded-2xl flex items-center gap-3 animate-float"
+            >
+              <div
+                class="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center text-white shadow-md"
+              >
+                <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+              </div>
+              <div class="text-left">
+                <div
+                  class="text-xxs uppercase tracking-wider text-slate-400 font-bold"
+                >
+                  Queue Bypass
+                </div>
+                <div class="text-xs font-bold text-slate-900 dark:text-white">
+                  Zero Waiting Time
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="w-full aspect-[4/5] sm:aspect-square bg-gradient-to-tr from-sky-500/10 to-emerald-500/10 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 relative flex items-center justify-center shadow-2xl"
+            >
+              <img
+                src="./mushibat_logo.jpg"
+                alt="Mushibat Healthcare Logo"
+                class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+              />
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/30 to-transparent"
+              ></div>
+              <div class="absolute bottom-6 left-6 text-white text-left">
+                <div
+                  class="inline-block px-2.5 py-1 rounded-md bg-emerald-600/90 text-white text-xxs font-bold uppercase tracking-wider mb-1"
+                >
+                  Official Platform
+                </div>
+                <h4 class="font-bold font-serif text-lg text-white">
+                  Mushibat Healthcare
+                </h4>
+                <p class="text-xs text-slate-200">
+                  Bihar (Mithila Region) Appointment Booking
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Search Bar Section -->
+        <div class="mt-14 reveal">
+          <div
+            class="glass-panel p-6 sm:p-8 rounded-premium shadow-2xl border border-white/50 dark:border-slate-800"
+          >
+            <div
+              class="flex items-center justify-between mb-4 flex-wrap gap-2 text-left"
+            >
+              <h3
+                class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2 font-serif"
+              >
+                <i data-lucide="search" class="text-sky-600 w-5 h-5"></i> Search
+                &amp; Book Healthcare in Mithila Region
+              </h3>
+              <span class="text-xs font-semibold text-slate-400"
+                >Instant Online Slot Booking</span
+              >
+            </div>
+
+            <form
+              id="main-search-form"
+              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+            >
+              <!-- 1. Select District -->
+              <div class="relative text-left">
+                <label
+                  for="search-city"
+                  class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wider"
+                  >Select District</label
+                >
+                <div class="relative">
+                  <i
+                    data-lucide="map-pin"
+                    class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sky-600 w-4 h-4"
+                  ></i>
+                  <select
+                    id="search-city"
+                    class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-3 pl-10 pr-8 text-slate-800 dark:text-slate-100 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all appearance-none cursor-pointer"
+                  >
+                    <option value="All">All Districts (Bihar)</option>
+                    <option value="Darbhanga">Darbhanga</option>
+                    <option value="Samastipur">Samastipur</option>
+                    <option value="Madhubani">Madhubani</option>
+                    <option value="Sitamarhi">Sitamarhi</option>
+                  </select>
+                  <i
+                    data-lucide="chevron-down"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 pointer-events-none"
+                  ></i>
+                </div>
+              </div>
+
+              <!-- 2. Search Hospital -->
+              <div class="relative text-left">
+                <label
+                  for="search-hospital"
+                  class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wider"
+                  >Search Hospital</label
+                >
+                <div class="relative">
+                  <i
+                    data-lucide="building-2"
+                    class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sky-600 w-4 h-4"
+                  ></i>
+                  <input
+                    type="text"
+                    id="search-hospital"
+                    placeholder="e.g. DMCH, Mithila Care..."
+                    class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-3 pl-10 pr-4 text-slate-800 dark:text-slate-100 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all"
+                  />
+                </div>
+              </div>
+
+              <!-- 3. Search Doctor & Specialty -->
+              <div class="relative text-left">
+                <label
+                  for="search-doctor"
+                  class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wider"
+                  >Search Doctor / Specialty</label
+                >
+                <div class="relative">
+                  <i
+                    data-lucide="stethoscope"
+                    class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sky-600 w-4 h-4"
+                  ></i>
+                  <input
+                    type="text"
+                    id="search-doctor"
+                    placeholder="e.g. Cardiologist, Dr. Jha..."
+                    class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-3 pl-10 pr-4 text-slate-800 dark:text-slate-100 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all"
+                  />
+                </div>
+              </div>
+
+              <!-- Submit button -->
+              <div class="flex items-end">
+                <button
+                  type="submit"
+                  class="w-full bg-gradient-to-r from-sky-600 to-emerald-600 hover:from-sky-700 hover:to-emerald-700 text-white font-bold rounded-xl py-3.5 transition-all shadow-md shadow-sky-600/20 flex items-center justify-center gap-2 cursor-pointer transform hover:-translate-y-0.5"
+                >
+                  <i data-lucide="search" class="w-4 h-4"></i> Search
+                  Appointments
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Districts Section -->
+    <section
+      id="districts"
+      class="py-20 bg-white dark:bg-slate-950 border-t border-slate-100 dark:border-slate-900"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-14 reveal">
+          <div
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-sky-100 text-sky-800 dark:bg-slate-900 dark:text-sky-300 text-xs font-bold mb-3 border border-sky-200 dark:border-slate-800"
+          >
+            <i data-lucide="map" class="w-3.5 h-3.5 text-sky-600"></i> Initial
+            Operational Coverage
+          </div>
+          <h2
+            class="font-serif text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight"
+          >
+            Explore Districts in Bihar
+          </h2>
+          <p class="text-slate-600 dark:text-slate-400 text-sm sm:text-base">
+            Mushibat Healthcare initially connects top medical colleges,
+            government medical centers, specialty hospital chains, and local
+            clinics across these key districts of Mithila.
+          </p>
+        </div>
+
+        <!-- District Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- District 1: Darbhanga -->
+          <div
+            class="district-card glass-panel rounded-premium p-6 border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between hover:shadow-xl hover:shadow-sky-600/10 transition-all group reveal"
+          >
+            <div class="text-left">
+              <div class="flex items-center justify-between mb-4">
+                <span
+                  class="w-10 h-10 rounded-xl bg-sky-100 dark:bg-slate-800 text-sky-600 flex items-center justify-center font-bold text-lg"
+                >
+                  📍
+                </span>
+                <span
+                  class="text-xs font-bold text-sky-600 bg-sky-50 dark:bg-slate-800 px-2.5 py-1 rounded-full border border-sky-100 dark:border-slate-700"
+                  >Hub District</span
+                >
+              </div>
+
+              <h3
+                class="font-serif text-2xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-sky-600 transition-colors"
+              >
+                Darbhanga
+              </h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">
+                Healthcare Capital of Mithila Region
+              </p>
+
+              <ul
+                class="space-y-2.5 mb-6 text-xs text-slate-700 dark:text-slate-300 font-medium"
+              >
+                <li class="flex items-center gap-2">
+                  <i
+                    data-lucide="building-2"
+                    class="w-4 h-4 text-emerald-500"
+                  ></i>
+                  <span>DMCH (Darbhanga Medical College)</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i>
+                  <span class="font-semibold text-amber-600 dark:text-amber-400"
+                    >AIIMS Darbhanga (Coming Soon)</span
+                  >
+                </li>
+                <li class="flex items-center gap-2">
+                  <i data-lucide="hospital" class="w-4 h-4 text-sky-600"></i>
+                  <span>Private Super-Specialty Hospitals</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i
+                    data-lucide="stethoscope"
+                    class="w-4 h-4 text-slate-400"
+                  ></i>
+                  <span>Verified Diagnostic Clinics</span>
+                </li>
+              </ul>
+            </div>
+
+            <button
+              class="district-filter-btn w-full bg-slate-900 hover:bg-sky-600 dark:bg-slate-800 dark:hover:bg-sky-600 text-white text-xs font-bold py-3 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+              data-district="Darbhanga"
+            >
+              Explore Hospitals
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- District 2: Samastipur -->
+          <div
+            class="district-card glass-panel rounded-premium p-6 border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between hover:shadow-xl hover:shadow-sky-600/10 transition-all group reveal"
+            style="animation-delay: 0.1s"
+          >
+            <div class="text-left">
+              <div class="flex items-center justify-between mb-4">
+                <span
+                  class="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-slate-800 text-emerald-600 flex items-center justify-center font-bold text-lg"
+                >
+                  📍
+                </span>
+                <span
+                  class="text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-slate-800 px-2.5 py-1 rounded-full border border-emerald-100 dark:border-slate-700"
+                  >Active Network</span
+                >
+              </div>
+
+              <h3
+                class="font-serif text-2xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-emerald-600 transition-colors"
+              >
+                Samastipur
+              </h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">
+                Rapidly Growing Medical Hub
+              </p>
+
+              <ul
+                class="space-y-2.5 mb-6 text-xs text-slate-700 dark:text-slate-300 font-medium"
+              >
+                <li class="flex items-center gap-2">
+                  <i
+                    data-lucide="building-2"
+                    class="w-4 h-4 text-emerald-500"
+                  ></i>
+                  <span>Sadar Hospital Samastipur</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i data-lucide="hospital" class="w-4 h-4 text-sky-600"></i>
+                  <span>Top Heart &amp; Ortho Care Hospitals</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i data-lucide="activity" class="w-4 h-4 text-amber-500"></i>
+                  <span>24x7 Emergency Nursing Centers</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i
+                    data-lucide="stethoscope"
+                    class="w-4 h-4 text-slate-400"
+                  ></i>
+                  <span>Pediatric &amp; Maternity Clinics</span>
+                </li>
+              </ul>
+            </div>
+
+            <button
+              class="district-filter-btn w-full bg-slate-900 hover:bg-emerald-600 dark:bg-slate-800 dark:hover:bg-emerald-600 text-white text-xs font-bold py-3 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+              data-district="Samastipur"
+            >
+              Explore <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- District 3: Madhubani -->
+          <div
+            class="district-card glass-panel rounded-premium p-6 border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between hover:shadow-xl hover:shadow-sky-600/10 transition-all group reveal"
+            style="animation-delay: 0.2s"
+          >
+            <div class="text-left">
+              <div class="flex items-center justify-between mb-4">
+                <span
+                  class="w-10 h-10 rounded-xl bg-amber-100 dark:bg-slate-800 text-amber-600 flex items-center justify-center font-bold text-lg"
+                >
+                  📍
+                </span>
+                <span
+                  class="text-xs font-bold text-amber-600 bg-amber-50 dark:bg-slate-800 px-2.5 py-1 rounded-full border border-amber-100 dark:border-slate-700"
+                  >Active Network</span
+                >
+              </div>
+
+              <h3
+                class="font-serif text-2xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-amber-600 transition-colors"
+              >
+                Madhubani
+              </h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">
+                Heart of Mithila Heritage
+              </p>
+
+              <ul
+                class="space-y-2.5 mb-6 text-xs text-slate-700 dark:text-slate-300 font-medium"
+              >
+                <li class="flex items-center gap-2">
+                  <i
+                    data-lucide="building-2"
+                    class="w-4 h-4 text-emerald-500"
+                  ></i>
+                  <span>Madhubani Sadar Medical Center</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i data-lucide="hospital" class="w-4 h-4 text-sky-600"></i>
+                  <span>Mithila Care Multispecialty</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i data-lucide="heart" class="w-4 h-4 text-rose-500"></i>
+                  <span>Gynecology &amp; Mother Care Units</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i
+                    data-lucide="stethoscope"
+                    class="w-4 h-4 text-slate-400"
+                  ></i>
+                  <span>Local General Clinics</span>
+                </li>
+              </ul>
+            </div>
+
+            <button
+              class="district-filter-btn w-full bg-slate-900 hover:bg-amber-600 dark:bg-slate-800 dark:hover:bg-amber-600 text-white text-xs font-bold py-3 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+              data-district="Madhubani"
+            >
+              Explore <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- District 4: Sitamarhi -->
+          <div
+            class="district-card glass-panel rounded-premium p-6 border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between hover:shadow-xl hover:shadow-sky-600/10 transition-all group reveal"
+            style="animation-delay: 0.3s"
+          >
+            <div class="text-left">
+              <div class="flex items-center justify-between mb-4">
+                <span
+                  class="w-10 h-10 rounded-xl bg-purple-100 dark:bg-slate-800 text-purple-600 flex items-center justify-center font-bold text-lg"
+                >
+                  📍
+                </span>
+                <span
+                  class="text-xs font-bold text-purple-600 bg-purple-50 dark:bg-slate-800 px-2.5 py-1 rounded-full border border-purple-100 dark:border-slate-700"
+                  >Active Network</span
+                >
+              </div>
+
+              <h3
+                class="font-serif text-2xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-purple-600 transition-colors"
+              >
+                Sitamarhi
+              </h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">
+                Key Border &amp; Regional Healthcare
+              </p>
+
+              <ul
+                class="space-y-2.5 mb-6 text-xs text-slate-700 dark:text-slate-300 font-medium"
+              >
+                <li class="flex items-center gap-2">
+                  <i
+                    data-lucide="building-2"
+                    class="w-4 h-4 text-emerald-500"
+                  ></i>
+                  <span>Sitamarhi District Hospital</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i data-lucide="hospital" class="w-4 h-4 text-sky-600"></i>
+                  <span>Janakpur Road Care Centers</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i data-lucide="eye" class="w-4 h-4 text-indigo-500"></i>
+                  <span>Specialized Eye &amp; ENT Hospitals</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i
+                    data-lucide="stethoscope"
+                    class="w-4 h-4 text-slate-400"
+                  ></i>
+                  <span>Diagnostic Path Labs</span>
+                </li>
+              </ul>
+            </div>
+
+            <button
+              class="district-filter-btn w-full bg-slate-900 hover:bg-purple-600 dark:bg-slate-800 dark:hover:bg-purple-600 text-white text-xs font-bold py-3 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+              data-district="Sitamarhi"
+            >
+              Explore <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Popular Hospitals Section -->
+    <section id="hospitals" class="py-20 bg-slate-50 dark:bg-slate-900/50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          class="flex flex-col md:flex-row md:items-end justify-between mb-12 reveal"
+        >
+          <div class="text-left max-w-2xl">
+            <div
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-100 text-sky-800 dark:bg-slate-800 dark:text-sky-300 text-xs font-bold mb-3"
+            >
+              <i data-lucide="building-2" class="w-3.5 h-3.5 text-sky-600"></i>
+              Verified Medical Institutions
+            </div>
+            <h2
+              class="font-serif text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-3 tracking-tight"
+            >
+              Popular Verified Hospitals
+            </h2>
+            <p class="text-slate-600 dark:text-slate-400 text-sm sm:text-base">
+              Discover top-rated hospitals in Darbhanga, Samastipur, Madhubani,
+              and Sitamarhi. Compare doctor availability, OPD timing, ratings,
+              and book directly.
+            </p>
+          </div>
+
+          <!-- Filter tabs for quick district toggle -->
+          <div class="mt-6 md:mt-0 flex flex-wrap gap-2">
+            <button
+              class="hosp-district-tab active px-4 py-2 rounded-xl text-xs font-bold bg-sky-600 text-white shadow-sm cursor-pointer transition-all"
+              data-target="All"
+            >
+              All Hospitals
+            </button>
+            <button
+              class="hosp-district-tab px-4 py-2 rounded-xl text-xs font-bold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition-all"
+              data-target="Darbhanga"
+            >
+              Darbhanga
+            </button>
+            <button
+              class="hosp-district-tab px-4 py-2 rounded-xl text-xs font-bold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition-all"
+              data-target="Samastipur"
+            >
+              Samastipur
+            </button>
+            <button
+              class="hosp-district-tab px-4 py-2 rounded-xl text-xs font-bold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition-all"
+              data-target="Madhubani"
+            >
+              Madhubani
+            </button>
+            <button
+              class="hosp-district-tab px-4 py-2 rounded-xl text-xs font-bold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition-all"
+              data-target="Sitamarhi"
+            >
+              Sitamarhi
+            </button>
+          </div>
+        </div>
+
+        <!-- Hospital Cards Grid -->
+        <div
+          id="hospitals-grid"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          <!-- Hospital Card 1: DMCH Darbhanga -->
+          <div
+            class="hospital-card glass-panel rounded-premium overflow-hidden border border-white/40 dark:border-slate-800 flex flex-col reveal"
+            data-district="Darbhanga"
+          >
+            <div class="relative h-52 overflow-hidden bg-slate-200">
+              <img
+                src="https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?auto=format&fit=crop&q=80&w=600"
+                alt="DMCH Darbhanga Medical College & Hospital"
+                class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+              />
+              <span
+                class="absolute top-4 left-4 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md flex items-center gap-1"
+              >
+                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Govt.
+                Govt Medical College
+              </span>
+              <span
+                class="absolute top-4 right-4 bg-sky-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md"
+              >
+                📍 Darbhanga
+              </span>
+            </div>
+            <div class="p-6 flex-1 flex flex-col text-left">
+              <div class="flex items-center justify-between mb-3">
+                <span
+                  class="text-xs font-bold text-sky-700 bg-sky-100 dark:bg-slate-800 dark:text-sky-300 px-2.5 py-1 rounded-lg"
+                  >Multi-Speciality Tertiary</span
+                >
+                <div class="flex items-center gap-1 text-amber-500">
+                  <i data-lucide="star" class="w-4 h-4 fill-amber-500"></i>
+                  <span class="text-sm font-bold text-slate-900 dark:text-white"
+                    >4.8</span
+                  >
+                </div>
+              </div>
+
+              <h3
+                class="font-serif text-xl font-bold text-slate-900 dark:text-white mb-2"
+              >
+                DMCH (Darbhanga Medical College &amp; Hospital)
+              </h3>
+              <p
+                class="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mb-4"
+              >
+                <i
+                  data-lucide="map-pin"
+                  class="w-3.5 h-3.5 text-sky-600 flex-shrink-0"
+                ></i>
+                Laheriasarai, Darbhanga, Bihar 846003
+              </p>
+
+              <div
+                class="flex items-center gap-4 text-xs font-semibold text-slate-600 dark:text-slate-400 mb-6 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800"
+              >
+                <span class="flex items-center gap-1"
+                  ><i data-lucide="users" class="w-3.5 h-3.5 text-sky-600"></i>
+                  45+ Doctors</span
+                >
+                <span>•</span>
+                <span
+                  class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400"
+                  ><i data-lucide="clock" class="w-3.5 h-3.5"></i> 24x7
+                  Emergency Care</span
+                >
+              </div>
+
+              <button
+                class="book-btn w-full mt-auto bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-xl transition-all shadow-md shadow-sky-600/20 flex items-center justify-center gap-2 cursor-pointer transform hover:-translate-y-0.5"
+                data-name="DMCH Darbhanga"
+              >
+                Book Appointment
+              </button>
+            </div>
+          </div>
+
+          <!-- Hospital Card 2: Jeevan Hospital (Benipur, Darbhanga) -->
+          <div
+            class="hospital-card glass-panel rounded-premium overflow-hidden border border-white/40 dark:border-slate-800 flex flex-col reveal"
+            style="animation-delay: 0.1s"
+            data-district="Darbhanga"
+          >
+            <div class="relative h-52 overflow-hidden bg-slate-200">
+              <img
+                src="https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkRk7sY9ZfNAA17ycPt23ewsFwjiYfIDTOsb0GyDBIdq-oyzYlLAsd358pXi_tCBs9d5WE23FJ5B96px4S2sOGFn-40GjA8Fn4sZnEwtNeyb0Xm7SzpVpUOq5lTFIHS57m2WNrwk0ytvu8_=w224-h298-k-no"
+                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=600'"
+                alt="Jeevan Hospital Benipur Darbhanga"
+                class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+              />
+              <span
+                class="absolute top-4 left-4 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md flex items-center gap-1"
+              >
+                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Multi-Specialty
+              </span>
+              <span
+                class="absolute top-4 right-4 bg-sky-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md"
+              >
+                📍 Benipur, Darbhanga
+              </span>
+            </div>
+            <div class="p-6 flex-1 flex flex-col text-left">
+              <div class="flex items-center justify-between mb-3">
+                <span
+                  class="text-xs font-bold text-sky-700 bg-sky-100 dark:bg-slate-800 dark:text-sky-300 px-2.5 py-1 rounded-lg"
+                  >General &amp; Critical Care</span
+                >
+                <div class="flex items-center gap-1 text-amber-500">
+                  <i data-lucide="star" class="w-4 h-4 fill-amber-500"></i>
+                  <span class="text-sm font-bold text-slate-900 dark:text-white"
+                    >4.9</span
+                  >
+                </div>
+              </div>
+
+              <h3
+                class="font-serif text-xl font-bold text-slate-900 dark:text-white mb-2"
+              >
+                Jeevan Hospital
+              </h3>
+              <p
+                class="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mb-4"
+              >
+                <i
+                  data-lucide="map-pin"
+                  class="w-3.5 h-3.5 text-sky-600 flex-shrink-0"
+                ></i>
+                Nandapatti Road, Near Purana Cinema Hall, Benipur, Darbhanga - 847103
+              </p>
+
+              <div
+                class="flex items-center gap-4 text-xs font-semibold text-slate-600 dark:text-slate-400 mb-6 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800"
+              >
+                <span class="flex items-center gap-1"
+                  ><i data-lucide="users" class="w-3.5 h-3.5 text-sky-600"></i>
+                  25+ Doctors</span
+                >
+                <span>•</span>
+                <span
+                  class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400"
+                  ><i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                  24x7 Emergency</span
+                >
+              </div>
+
+              <button
+                class="book-btn w-full mt-auto bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-xl transition-all shadow-md shadow-sky-600/20 flex items-center justify-center gap-2 cursor-pointer transform hover:-translate-y-0.5"
+                data-name="Jeevan Hospital (Benipur, Darbhanga)"
+              >
+                Book Appointment
+              </button>
+            </div>
+          </div>
+
+          <!-- Hospital Card 3: Samastipur Heart & Critical Care -->
+          <div
+            class="hospital-card glass-panel rounded-premium overflow-hidden border border-white/40 dark:border-slate-800 flex flex-col reveal"
+            style="animation-delay: 0.2s"
+            data-district="Samastipur"
+          >
+            <div class="relative h-52 overflow-hidden bg-slate-200">
+              <img
+                src="https://images.unsplash.com/photo-1512678080530-7760d81faba6?auto=format&fit=crop&q=80&w=600"
+                alt="Samastipur Heart & Critical Care Institute"
+                class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+              />
+              <span
+                class="absolute top-4 left-4 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md flex items-center gap-1"
+              >
+                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Verified
+                Private
+              </span>
+              <span
+                class="absolute top-4 right-4 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md"
+              >
+                📍 Samastipur
+              </span>
+            </div>
+            <div class="p-6 flex-1 flex flex-col text-left">
+              <div class="flex items-center justify-between mb-3">
+                <span
+                  class="text-xs font-bold text-emerald-700 bg-emerald-100 dark:bg-slate-800 dark:text-emerald-300 px-2.5 py-1 rounded-lg"
+                  >Cardiology &amp; Trauma</span
+                >
+                <div class="flex items-center gap-1 text-amber-500">
+                  <i data-lucide="star" class="w-4 h-4 fill-amber-500"></i>
+                  <span class="text-sm font-bold text-slate-900 dark:text-white"
+                    >4.7</span
+                  >
+                </div>
+              </div>
+
+              <h3
+                class="font-serif text-xl font-bold text-slate-900 dark:text-white mb-2"
+              >
+                Samastipur Heart &amp; Care Hospital
+              </h3>
+              <p
+                class="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mb-4"
+              >
+                <i
+                  data-lucide="map-pin"
+                  class="w-3.5 h-3.5 text-sky-600 flex-shrink-0"
+                ></i>
+                Mohanpur Road, Samastipur, Bihar 848101
+              </p>
+
+              <div
+                class="flex items-center gap-4 text-xs font-semibold text-slate-600 dark:text-slate-400 mb-6 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800"
+              >
+                <span class="flex items-center gap-1"
+                  ><i data-lucide="users" class="w-3.5 h-3.5 text-sky-600"></i>
+                  25+ Doctors</span
+                >
+                <span>•</span>
+                <span
+                  class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400"
+                  ><i data-lucide="truck" class="w-3.5 h-3.5"></i> ICU
+                  Ambulance</span
+                >
+              </div>
+
+              <button
+                class="book-btn w-full mt-auto bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-xl transition-all shadow-md shadow-sky-600/20 flex items-center justify-center gap-2 cursor-pointer transform hover:-translate-y-0.5"
+                data-name="Samastipur Heart Hospital"
+              >
+                Book Appointment
+              </button>
+            </div>
+          </div>
+
+          <!-- Hospital Card 4: Madhubani Central Multispecialty -->
+          <div
+            class="hospital-card glass-panel rounded-premium overflow-hidden border border-white/40 dark:border-slate-800 flex flex-col reveal"
+            data-district="Madhubani"
+          >
+            <div class="relative h-52 overflow-hidden bg-slate-200">
+              <img
+                src="https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&q=80&w=600"
+                alt="Madhubani Central Multispecialty Hospital"
+                class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+              />
+              <span
+                class="absolute top-4 left-4 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md flex items-center gap-1"
+              >
+                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Verified
+              </span>
+              <span
+                class="absolute top-4 right-4 bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md"
+              >
+                📍 Madhubani
+              </span>
+            </div>
+            <div class="p-6 flex-1 flex flex-col text-left">
+              <div class="flex items-center justify-between mb-3">
+                <span
+                  class="text-xs font-bold text-amber-700 bg-amber-100 dark:bg-slate-800 dark:text-amber-300 px-2.5 py-1 rounded-lg"
+                  >Mother &amp; Child Specialty</span
+                >
+                <div class="flex items-center gap-1 text-amber-500">
+                  <i data-lucide="star" class="w-4 h-4 fill-amber-500"></i>
+                  <span class="text-sm font-bold text-slate-900 dark:text-white"
+                    >4.8</span
+                  >
+                </div>
+              </div>
+
+              <h3
+                class="font-serif text-xl font-bold text-slate-900 dark:text-white mb-2"
+              >
+                Madhubani Central Hospital
+              </h3>
+              <p
+                class="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mb-4"
+              >
+                <i
+                  data-lucide="map-pin"
+                  class="w-3.5 h-3.5 text-sky-600 flex-shrink-0"
+                ></i>
+                Station Road, Madhubani, Bihar 847211
+              </p>
+
+              <div
+                class="flex items-center gap-4 text-xs font-semibold text-slate-600 dark:text-slate-400 mb-6 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800"
+              >
+                <span class="flex items-center gap-1"
+                  ><i data-lucide="users" class="w-3.5 h-3.5 text-sky-600"></i>
+                  20+ Doctors</span
+                >
+                <span>•</span>
+                <span
+                  class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400"
+                  ><i data-lucide="flask-conical" class="w-3.5 h-3.5"></i> NABL
+                  Lab</span
+                >
+              </div>
+
+              <button
+                class="book-btn w-full mt-auto bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-xl transition-all shadow-md shadow-sky-600/20 flex items-center justify-center gap-2 cursor-pointer transform hover:-translate-y-0.5"
+                data-name="Madhubani Central Hospital"
+              >
+                Book Appointment
+              </button>
+            </div>
+          </div>
+
+          <!-- Hospital Card 5: Sitamarhi City Care Hospital -->
+          <div
+            class="hospital-card glass-panel rounded-premium overflow-hidden border border-white/40 dark:border-slate-800 flex flex-col reveal"
+            style="animation-delay: 0.1s"
+            data-district="Sitamarhi"
+          >
+            <div class="relative h-52 overflow-hidden bg-slate-200">
+              <img
+                src="https://images.unsplash.com/photo-1538108149393-fbbd81895907?auto=format&fit=crop&q=80&w=600"
+                alt="Sitamarhi City Care Hospital"
+                class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+              />
+              <span
+                class="absolute top-4 left-4 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md flex items-center gap-1"
+              >
+                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Verified
+              </span>
+              <span
+                class="absolute top-4 right-4 bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md"
+              >
+                📍 Sitamarhi
+              </span>
+            </div>
+            <div class="p-6 flex-1 flex flex-col text-left">
+              <div class="flex items-center justify-between mb-3">
+                <span
+                  class="text-xs font-bold text-purple-700 bg-purple-100 dark:bg-slate-800 dark:text-purple-300 px-2.5 py-1 rounded-lg"
+                  >General &amp; Ortho</span
+                >
+                <div class="flex items-center gap-1 text-amber-500">
+                  <i data-lucide="star" class="w-4 h-4 fill-amber-500"></i>
+                  <span class="text-sm font-bold text-slate-900 dark:text-white"
+                    >4.6</span
+                  >
+                </div>
+              </div>
+
+              <h3
+                class="font-serif text-xl font-bold text-slate-900 dark:text-white mb-2"
+              >
+                Sitamarhi City Care Hospital
+              </h3>
+              <p
+                class="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mb-4"
+              >
+                <i
+                  data-lucide="map-pin"
+                  class="w-3.5 h-3.5 text-sky-600 flex-shrink-0"
+                ></i>
+                Mehsaul Chowk, Sitamarhi, Bihar 843302
+              </p>
+
+              <div
+                class="flex items-center gap-4 text-xs font-semibold text-slate-600 dark:text-slate-400 mb-6 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800"
+              >
+                <span class="flex items-center gap-1"
+                  ><i data-lucide="users" class="w-3.5 h-3.5 text-sky-600"></i>
+                  18+ Doctors</span
+                >
+                <span>•</span>
+                <span
+                  class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400"
+                  ><i data-lucide="video" class="w-3.5 h-3.5"></i> Tele-OPD
+                  Ready</span
+                >
+              </div>
+
+              <button
+                class="book-btn w-full mt-auto bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-xl transition-all shadow-md shadow-sky-600/20 flex items-center justify-center gap-2 cursor-pointer transform hover:-translate-y-0.5"
+                data-name="Sitamarhi City Care Hospital"
+              >
+                Book Appointment
+              </button>
+            </div>
+          </div>
+
+          <!-- Hospital Card 6: Mithila Heritage Hospital Darbhanga -->
+          <div
+            class="hospital-card glass-panel rounded-premium overflow-hidden border border-white/40 dark:border-slate-800 flex flex-col reveal"
+            style="animation-delay: 0.2s"
+            data-district="Darbhanga"
+          >
+            <div class="relative h-52 overflow-hidden bg-slate-200">
+              <img
+                src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=600"
+                alt="Mithila Heritage Hospital & Research Center"
+                class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+              />
+              <span
+                class="absolute top-4 left-4 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md flex items-center gap-1"
+              >
+                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Verified
+              </span>
+              <span
+                class="absolute top-4 right-4 bg-sky-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md"
+              >
+                📍 Darbhanga
+              </span>
+            </div>
+            <div class="p-6 flex-1 flex flex-col text-left">
+              <div class="flex items-center justify-between mb-3">
+                <span
+                  class="text-xs font-bold text-sky-700 bg-sky-100 dark:bg-slate-800 dark:text-sky-300 px-2.5 py-1 rounded-lg"
+                  >Neurology &amp; ENT</span
+                >
+                <div class="flex items-center gap-1 text-amber-500">
+                  <i data-lucide="star" class="w-4 h-4 fill-amber-500"></i>
+                  <span class="text-sm font-bold text-slate-900 dark:text-white"
+                    >4.9</span
+                  >
+                </div>
+              </div>
+
+              <h3
+                class="font-serif text-xl font-bold text-slate-900 dark:text-white mb-2"
+              >
+                Mithila Heritage Hospital
+              </h3>
+              <p
+                class="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mb-4"
+              >
+                <i
+                  data-lucide="map-pin"
+                  class="w-3.5 h-3.5 text-sky-600 flex-shrink-0"
+                ></i>
+                Donar Chowk, Darbhanga, Bihar 846004
+              </p>
+
+              <div
+                class="flex items-center gap-4 text-xs font-semibold text-slate-600 dark:text-slate-400 mb-6 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800"
+              >
+                <span class="flex items-center gap-1"
+                  ><i data-lucide="users" class="w-3.5 h-3.5 text-sky-600"></i>
+                  32+ Doctors</span
+                >
+                <span>•</span>
+                <span
+                  class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400"
+                  ><i data-lucide="award" class="w-3.5 h-3.5"></i> NABH
+                  Accredited</span
+                >
+              </div>
+
+              <button
+                class="book-btn w-full mt-auto bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-xl transition-all shadow-md shadow-sky-600/20 flex items-center justify-center gap-2 cursor-pointer transform hover:-translate-y-0.5"
+                data-name="Mithila Heritage Hospital"
+              >
+                Book Appointment
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Search by Speciality Section -->
+    <section id="specialties" class="py-20 bg-white dark:bg-slate-950">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+          <div
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-slate-900 dark:text-emerald-300 text-xs font-bold mb-3 border border-emerald-200 dark:border-slate-800"
+          >
+            <i
+              data-lucide="stethoscope"
+              class="w-3.5 h-3.5 text-emerald-600"
+            ></i>
+            Expert Departments
+          </div>
+          <h2
+            class="font-serif text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight"
+          >
+            Search by Speciality
+          </h2>
+          <p class="text-slate-600 dark:text-slate-400 text-sm sm:text-base">
+            Find top specialized doctors across Bihar based on your exact
+            medical requirements.
+          </p>
+        </div>
+
+        <!-- 10 Speciality Cards -->
+        <div
+          class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5 sm:gap-6"
+        >
+          <!-- 1. Cardiologist -->
+          <div
+            class="specialty-card glass-panel p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-center flex flex-col items-center justify-center cursor-pointer group hover:border-sky-500 transition-all reveal"
+            data-specialty="Cardiologist"
+          >
+            <div
+              class="w-14 h-14 rounded-2xl bg-rose-100 dark:bg-rose-900/30 text-rose-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-sm"
+            >
+              <i data-lucide="heart-pulse" class="w-7 h-7"></i>
+            </div>
+            <h3
+              class="font-serif text-base font-bold text-slate-900 dark:text-white mb-1 group-hover:text-sky-600 transition-colors"
+            >
+              Cardiologist
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              Heart &amp; Vascular
+            </p>
+          </div>
+
+          <!-- 2. Orthopedic -->
+          <div
+            class="specialty-card glass-panel p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-center flex flex-col items-center justify-center cursor-pointer group hover:border-sky-500 transition-all reveal"
+            style="animation-delay: 0.05s"
+            data-specialty="Orthopedic"
+          >
+            <div
+              class="w-14 h-14 rounded-2xl bg-amber-100 dark:bg-amber-900/30 text-amber-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-sm"
+            >
+              <i data-lucide="bone" class="w-7 h-7"></i>
+            </div>
+            <h3
+              class="font-serif text-base font-bold text-slate-900 dark:text-white mb-1 group-hover:text-sky-600 transition-colors"
+            >
+              Orthopedic
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              Bone &amp; Joints
+            </p>
+          </div>
+
+          <!-- 3. Neurologist -->
+          <div
+            class="specialty-card glass-panel p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-center flex flex-col items-center justify-center cursor-pointer group hover:border-sky-500 transition-all reveal"
+            style="animation-delay: 0.1s"
+            data-specialty="Neurologist"
+          >
+            <div
+              class="w-14 h-14 rounded-2xl bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-sm"
+            >
+              <i data-lucide="brain" class="w-7 h-7"></i>
+            </div>
+            <h3
+              class="font-serif text-base font-bold text-slate-900 dark:text-white mb-1 group-hover:text-sky-600 transition-colors"
+            >
+              Neurologist
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              Brain &amp; Nerves
+            </p>
+          </div>
+
+          <!-- 4. ENT -->
+          <div
+            class="specialty-card glass-panel p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-center flex flex-col items-center justify-center cursor-pointer group hover:border-sky-500 transition-all reveal"
+            style="animation-delay: 0.15s"
+            data-specialty="ENT"
+          >
+            <div
+              class="w-14 h-14 rounded-2xl bg-teal-100 dark:bg-teal-900/30 text-teal-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-sm"
+            >
+              <i data-lucide="ear" class="w-7 h-7"></i>
+            </div>
+            <h3
+              class="font-serif text-base font-bold text-slate-900 dark:text-white mb-1 group-hover:text-sky-600 transition-colors"
+            >
+              ENT Specialist
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              Ear, Nose, Throat
+            </p>
+          </div>
+
+          <!-- 5. Eye Specialist -->
+          <div
+            class="specialty-card glass-panel p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-center flex flex-col items-center justify-center cursor-pointer group hover:border-sky-500 transition-all reveal"
+            style="animation-delay: 0.2s"
+            data-specialty="Eye Specialist"
+          >
+            <div
+              class="w-14 h-14 rounded-2xl bg-sky-100 dark:bg-sky-900/30 text-sky-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-sm"
+            >
+              <i data-lucide="eye" class="w-7 h-7"></i>
+            </div>
+            <h3
+              class="font-serif text-base font-bold text-slate-900 dark:text-white mb-1 group-hover:text-sky-600 transition-colors"
+            >
+              Eye Specialist
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              Ophthalmology
+            </p>
+          </div>
+
+          <!-- 6. Dentist -->
+          <div
+            class="specialty-card glass-panel p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-center flex flex-col items-center justify-center cursor-pointer group hover:border-sky-500 transition-all reveal"
+            style="animation-delay: 0.25s"
+            data-specialty="Dentist"
+          >
+            <div
+              class="w-14 h-14 rounded-2xl bg-purple-100 dark:bg-purple-900/30 text-purple-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-sm"
+            >
+              <i data-lucide="smile" class="w-7 h-7"></i>
+            </div>
+            <h3
+              class="font-serif text-base font-bold text-slate-900 dark:text-white mb-1 group-hover:text-sky-600 transition-colors"
+            >
+              Dentist
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              Dental &amp; Oral Care
+            </p>
+          </div>
+
+          <!-- 7. Pediatrician -->
+          <div
+            class="specialty-card glass-panel p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-center flex flex-col items-center justify-center cursor-pointer group hover:border-sky-500 transition-all reveal"
+            style="animation-delay: 0.3s"
+            data-specialty="Pediatrician"
+          >
+            <div
+              class="w-14 h-14 rounded-2xl bg-pink-100 dark:bg-pink-900/30 text-pink-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-sm"
+            >
+              <i data-lucide="baby" class="w-7 h-7"></i>
+            </div>
+            <h3
+              class="font-serif text-base font-bold text-slate-900 dark:text-white mb-1 group-hover:text-sky-600 transition-colors"
+            >
+              Pediatrician
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              Child Specialist
+            </p>
+          </div>
+
+          <!-- 8. Gynecologist -->
+          <div
+            class="specialty-card glass-panel p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-center flex flex-col items-center justify-center cursor-pointer group hover:border-sky-500 transition-all reveal"
+            style="animation-delay: 0.35s"
+            data-specialty="Gynecologist"
+          >
+            <div
+              class="w-14 h-14 rounded-2xl bg-fuchsia-100 dark:bg-fuchsia-900/30 text-fuchsia-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-sm"
+            >
+              <i data-lucide="user-check" class="w-7 h-7"></i>
+            </div>
+            <h3
+              class="font-serif text-base font-bold text-slate-900 dark:text-white mb-1 group-hover:text-sky-600 transition-colors"
+            >
+              Gynecologist
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              Women's Health
+            </p>
+          </div>
+
+          <!-- 9. General Physician -->
+          <div
+            class="specialty-card glass-panel p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-center flex flex-col items-center justify-center cursor-pointer group hover:border-sky-500 transition-all reveal"
+            style="animation-delay: 0.4s"
+            data-specialty="General Physician"
+          >
+            <div
+              class="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-sm"
+            >
+              <i data-lucide="stethoscope" class="w-7 h-7"></i>
+            </div>
+            <h3
+              class="font-serif text-base font-bold text-slate-900 dark:text-white mb-1 group-hover:text-sky-600 transition-colors"
+            >
+              General Physician
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              General Medicine
+            </p>
+          </div>
+
+          <!-- 10. Dermatologist -->
+          <div
+            class="specialty-card glass-panel p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-center flex flex-col items-center justify-center cursor-pointer group hover:border-sky-500 transition-all reveal"
+            style="animation-delay: 0.45s"
+            data-specialty="Dermatologist"
+          >
+            <div
+              class="w-14 h-14 rounded-2xl bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-sm"
+            >
+              <i data-lucide="sparkle" class="w-7 h-7"></i>
+            </div>
+            <h3
+              class="font-serif text-base font-bold text-slate-900 dark:text-white mb-1 group-hover:text-sky-600 transition-colors"
+            >
+              Dermatologist
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              Skin &amp; Hair Care
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Doctors Section -->
+    <section
+      id="doctors"
+      class="py-20 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-900"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+          <div
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-sky-100 text-sky-800 dark:bg-slate-800 dark:text-sky-300 text-xs font-bold mb-3 border border-sky-200 dark:border-slate-800"
+          >
+            <i data-lucide="award" class="w-3.5 h-3.5 text-sky-600"></i> Top
+            Medical Specialists
+          </div>
+          <h2
+            class="font-serif text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight"
+          >
+            Consult Experienced Doctors
+          </h2>
+          <p class="text-slate-600 dark:text-slate-400 text-sm sm:text-base">
+            Book OPD appointments with highly qualified doctors across
+            Darbhanga, Samastipur, Madhubani, and Sitamarhi.
+          </p>
+        </div>
+
+        <!-- Doctors Grid -->
+        <div
+          id="doctors-grid"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+        >
+          <!-- Doctor 1: Dr. Rameshwar Jha -->
+          <div
+            class="doctor-card glass-panel rounded-premium overflow-hidden border border-white/40 dark:border-slate-800 flex flex-col text-left reveal"
+            data-district="Darbhanga"
+            data-department="Cardiologist"
+          >
+            <div class="relative h-56 w-full overflow-hidden bg-slate-200 dark:bg-slate-800">
+              <img
+                src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=600"
+                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=600'"
+                alt="Dr. Rameshwar Jha"
+                loading="lazy"
+                class="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-105"
+              />
+              <span
+                class="absolute top-3 left-3 bg-emerald-500 text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow-md flex items-center gap-1"
+              >
+                <span
+                  class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"
+                ></span>
+                Available Today
+              </span>
+              <span
+                class="absolute top-3 right-3 bg-sky-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow-md"
+              >
+                📍 Darbhanga
+              </span>
+            </div>
+            <div class="p-5 flex-1 flex flex-col">
+              <h3
+                class="font-serif text-lg font-bold text-slate-900 dark:text-white mb-0.5"
+              >
+                Dr. Rameshwar Jha
+              </h3>
+              <p class="text-xs font-bold text-sky-600 dark:text-sky-400 mb-1">
+                DM Cardiology • M.D.
+              </p>
+              <p
+                class="text-xxs font-medium text-slate-500 dark:text-slate-400 mb-3"
+              >
+                DMCH &amp; AIIMS Senior Specialist
+              </p>
+
+              <div
+                class="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 mb-4 border-y border-slate-100 dark:border-slate-800 py-2.5"
+              >
+                <span class="flex items-center gap-1 font-medium"
+                  ><i
+                    data-lucide="briefcase"
+                    class="w-3.5 h-3.5 text-sky-600"
+                  ></i>
+                  18 Yrs Exp</span
+                >
+                <span
+                  class="flex items-center gap-1 font-bold text-emerald-600 dark:text-emerald-400"
+                  >₹500 Fee</span
+                >
+              </div>
+
+              <button
+                class="book-btn w-full mt-auto bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-md shadow-sky-600/20 flex items-center justify-center gap-1.5 cursor-pointer transform hover:-translate-y-0.5"
+                data-name="Dr. Rameshwar Jha"
+              >
+                Book Appointment
+              </button>
+            </div>
+          </div>
+
+          <!-- Doctor 2: Dr. Sunita Mishra -->
+          <div
+            class="doctor-card glass-panel rounded-premium overflow-hidden border border-white/40 dark:border-slate-800 flex flex-col text-left reveal"
+            style="animation-delay: 0.1s"
+            data-district="Madhubani"
+            data-department="Gynecologist"
+          >
+            <div class="relative h-56 w-full overflow-hidden bg-slate-200 dark:bg-slate-800">
+              <img
+                src="https://images.unsplash.com/photo-1594824813573-246434de83fb?auto=format&fit=crop&q=80&w=600"
+                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=600'"
+                alt="Dr. Sunita Mishra"
+                loading="lazy"
+                class="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-105"
+              />
+              <span
+                class="absolute top-3 left-3 bg-emerald-500 text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow-md flex items-center gap-1"
+              >
+                <span
+                  class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"
+                ></span>
+                Available Today
+              </span>
+              <span
+                class="absolute top-3 right-3 bg-amber-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow-md"
+              >
+                📍 Madhubani
+              </span>
+            </div>
+            <div class="p-5 flex-1 flex flex-col">
+              <h3
+                class="font-serif text-lg font-bold text-slate-900 dark:text-white mb-0.5"
+              >
+                Dr. Sunita Mishra
+              </h3>
+              <p class="text-xs font-bold text-sky-600 dark:text-sky-400 mb-1">
+                M.S. Obstetrics &amp; Gynecology
+              </p>
+              <p
+                class="text-xxs font-medium text-slate-500 dark:text-slate-400 mb-3"
+              >
+                Madhubani Maternity &amp; Mother Care
+              </p>
+
+              <div
+                class="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 mb-4 border-y border-slate-100 dark:border-slate-800 py-2.5"
+              >
+                <span class="flex items-center gap-1 font-medium"
+                  ><i
+                    data-lucide="briefcase"
+                    class="w-3.5 h-3.5 text-sky-600"
+                  ></i>
+                  12 Yrs Exp</span
+                >
+                <span
+                  class="flex items-center gap-1 font-bold text-emerald-600 dark:text-emerald-400"
+                  >₹400 Fee</span
+                >
+              </div>
+
+              <button
+                class="book-btn w-full mt-auto bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-md shadow-sky-600/20 flex items-center justify-center gap-1.5 cursor-pointer transform hover:-translate-y-0.5"
+                data-name="Dr. Sunita Mishra"
+              >
+                Book Appointment
+              </button>
+            </div>
+          </div>
+
+          <!-- Doctor 3: Dr. Rajeshwar Singh -->
+          <div
+            class="doctor-card glass-panel rounded-premium overflow-hidden border border-white/40 dark:border-slate-800 flex flex-col text-left reveal"
+            style="animation-delay: 0.2s"
+            data-district="Samastipur"
+            data-department="Orthopedic"
+          >
+            <div class="relative h-56 w-full overflow-hidden bg-slate-200 dark:bg-slate-800">
+              <img
+                src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=600"
+                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&q=80&w=600'"
+                alt="Dr. Rajeshwar Singh"
+                loading="lazy"
+                class="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-105"
+              />
+              <span
+                class="absolute top-3 left-3 bg-emerald-500 text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow-md flex items-center gap-1"
+              >
+                <span
+                  class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"
+                ></span>
+                Available Today
+              </span>
+              <span
+                class="absolute top-3 right-3 bg-emerald-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow-md"
+              >
+                📍 Samastipur
+              </span>
+            </div>
+            <div class="p-5 flex-1 flex flex-col">
+              <h3
+                class="font-serif text-lg font-bold text-slate-900 dark:text-white mb-0.5"
+              >
+                Dr. Rajeshwar Singh
+              </h3>
+              <p class="text-xs font-bold text-sky-600 dark:text-sky-400 mb-1">
+                M.S. Orthopedics (Joint &amp; Trauma)
+              </p>
+              <p
+                class="text-xxs font-medium text-slate-500 dark:text-slate-400 mb-3"
+              >
+                Samastipur Heart &amp; Ortho Care
+              </p>
+
+              <div
+                class="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 mb-4 border-y border-slate-100 dark:border-slate-800 py-2.5"
+              >
+                <span class="flex items-center gap-1 font-medium"
+                  ><i
+                    data-lucide="briefcase"
+                    class="w-3.5 h-3.5 text-sky-600"
+                  ></i>
+                  15 Yrs Exp</span
+                >
+                <span
+                  class="flex items-center gap-1 font-bold text-emerald-600 dark:text-emerald-400"
+                  >₹450 Fee</span
+                >
+              </div>
+
+              <button
+                class="book-btn w-full mt-auto bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-md shadow-sky-600/20 flex items-center justify-center gap-1.5 cursor-pointer transform hover:-translate-y-0.5"
+                data-name="Dr. Rajeshwar Singh"
+              >
+                Book Appointment
+              </button>
+            </div>
+          </div>
+
+          <!-- Doctor 4: Dr. Ananya Roy -->
+          <div
+            class="doctor-card glass-panel rounded-premium overflow-hidden border border-white/40 dark:border-slate-800 flex flex-col text-left reveal"
+            style="animation-delay: 0.3s"
+            data-district="Sitamarhi"
+            data-department="Pediatrician"
+          >
+            <div class="relative h-56 w-full overflow-hidden bg-slate-200 dark:bg-slate-800">
+              <img
+                src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=600"
+                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1594824813573-246434de83fb?auto=format&fit=crop&q=80&w=600'"
+                alt="Dr. Ananya Roy"
+                loading="lazy"
+                class="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-105"
+              />
+              <span
+                class="absolute top-3 left-3 bg-emerald-500 text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow-md flex items-center gap-1"
+              >
+                <span
+                  class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"
+                ></span>
+                Available Today
+              </span>
+              <span
+                class="absolute top-3 right-3 bg-purple-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow-md"
+              >
+                📍 Sitamarhi
+              </span>
+            </div>
+            <div class="p-5 flex-1 flex flex-col">
+              <h3
+                class="font-serif text-lg font-bold text-slate-900 dark:text-white mb-0.5"
+              >
+                Dr. Ananya Roy
+              </h3>
+              <p class="text-xs font-bold text-sky-600 dark:text-sky-400 mb-1">
+                M.D. Pediatrics (Child Care)
+              </p>
+              <p
+                class="text-xxs font-medium text-slate-500 dark:text-slate-400 mb-3"
+              >
+                Sitamarhi City Care Hospital
+              </p>
+
+              <div
+                class="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 mb-4 border-y border-slate-100 dark:border-slate-800 py-2.5"
+              >
+                <span class="flex items-center gap-1 font-medium"
+                  ><i
+                    data-lucide="briefcase"
+                    class="w-3.5 h-3.5 text-sky-600"
+                  ></i>
+                  10 Yrs Exp</span
+                >
+                <span
+                  class="flex items-center gap-1 font-bold text-emerald-600 dark:text-emerald-400"
+                  >₹350 Fee</span
+                >
+              </div>
+
+              <button
+                class="book-btn w-full mt-auto bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-md shadow-sky-600/20 flex items-center justify-center gap-1.5 cursor-pointer transform hover:-translate-y-0.5"
+                data-name="Dr. Ananya Roy"
+              >
+                Book Appointment
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Healthcare Services Section -->
+    <section id="services" class="py-20 bg-white dark:bg-slate-950">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+          <div
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-sky-100 text-sky-800 dark:bg-slate-900 dark:text-sky-300 text-xs font-bold mb-3 border border-sky-200 dark:border-slate-800"
+          >
+            <i data-lucide="heart" class="w-3.5 h-3.5 text-rose-500"></i>
+            Integrated Patient Services
+          </div>
+          <h2
+            class="font-serif text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight"
+          >
+            Comprehensive Healthcare Services
+          </h2>
+          <p class="text-slate-600 dark:text-slate-400 text-sm sm:text-base">
+            From fast hospital slot booking and 24x7 ICU ambulance response to
+            door-step lab testing and e-prescriptions.
+          </p>
+        </div>
+
+        <!-- Services Grid (8 Cards) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- 1. Hospital Appointment -->
+          <div
+            class="glass-panel p-6 rounded-premium border border-slate-200/80 dark:border-slate-800 text-left hover:shadow-xl hover:shadow-sky-600/10 transition-all group reveal"
+          >
+            <div
+              class="w-12 h-12 rounded-2xl bg-sky-100 dark:bg-sky-900/30 text-sky-600 flex items-center justify-center mb-5 group-hover:bg-sky-600 group-hover:text-white transition-colors"
+            >
+              <i data-lucide="calendar" class="w-6 h-6"></i>
+            </div>
+            <h3
+              class="font-serif text-lg font-bold text-slate-900 dark:text-white mb-2"
+            >
+              Hospital Appointment
+            </h3>
+            <p
+              class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4"
+            >
+              Instant OPD slot booking in Darbhanga, Samastipur, Madhubani &amp;
+              Sitamarhi without long counter lines.
+            </p>
+            <button
+              class="book-btn text-xs font-bold text-sky-600 dark:text-sky-400 flex items-center gap-1 hover:gap-2 transition-all cursor-pointer"
+              data-name="Hospital Appointment"
+            >
+              Book Appointment
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- 2. Video Consultation -->
+          <div
+            class="glass-panel p-6 rounded-premium border border-slate-200/80 dark:border-slate-800 text-left hover:shadow-xl hover:shadow-sky-600/10 transition-all group reveal"
+            style="animation-delay: 0.05s"
+          >
+            <div
+              class="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 flex items-center justify-center mb-5 group-hover:bg-emerald-600 group-hover:text-white transition-colors"
+            >
+              <i data-lucide="video" class="w-6 h-6"></i>
+            </div>
+            <h3
+              class="font-serif text-lg font-bold text-slate-900 dark:text-white mb-2"
+            >
+              Video Consultation
+            </h3>
+            <p
+              class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4"
+            >
+              Consult senior doctors virtually from home with HD video calling
+              and instant digital prescriptions.
+            </p>
+            <button
+              class="book-btn text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 hover:gap-2 transition-all cursor-pointer"
+              data-name="Video Consultation"
+            >
+              Consult Online
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- 3. Ambulance Booking -->
+          <div
+            class="glass-panel p-6 rounded-premium border border-slate-200/80 dark:border-slate-800 text-left hover:shadow-xl hover:shadow-sky-600/10 transition-all group reveal"
+            style="animation-delay: 0.1s"
+          >
+            <div
+              class="w-12 h-12 rounded-2xl bg-rose-100 dark:bg-rose-900/30 text-rose-600 flex items-center justify-center mb-5 group-hover:bg-rose-600 group-hover:text-white transition-colors"
+            >
+              <i data-lucide="truck" class="w-6 h-6"></i>
+            </div>
+            <h3
+              class="font-serif text-lg font-bold text-slate-900 dark:text-white mb-2"
+            >
+              Ambulance Booking
+            </h3>
+            <p
+              class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4"
+            >
+              24x7 ICU &amp; ALS ambulances dispatched across Bihar
+              districts with real-time GPS tracking.
+            </p>
+            <button
+              class="book-btn text-xs font-bold text-rose-600 dark:text-rose-400 flex items-center gap-1 hover:gap-2 transition-all cursor-pointer"
+              data-name="Ambulance Booking"
+            >
+              Book Ambulance
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- 4. Lab Tests -->
+          <div
+            class="glass-panel p-6 rounded-premium border border-slate-200/80 dark:border-slate-800 text-left hover:shadow-xl hover:shadow-sky-600/10 transition-all group reveal"
+            style="animation-delay: 0.15s"
+          >
+            <div
+              class="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-900/30 text-amber-600 flex items-center justify-center mb-5 group-hover:bg-amber-600 group-hover:text-white transition-colors"
+            >
+              <i data-lucide="flask-conical" class="w-6 h-6"></i>
+            </div>
+            <h3
+              class="font-serif text-lg font-bold text-slate-900 dark:text-white mb-2"
+            >
+              Lab Tests &amp; Sample
+            </h3>
+            <p
+              class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4"
+            >
+              Schedule door-step home blood sample collection and receive
+              digital lab reports on WhatsApp/App.
+            </p>
+            <button
+              class="book-btn text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1 hover:gap-2 transition-all cursor-pointer"
+              data-name="Lab Tests"
+            >
+              Book Home Lab Test
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- 5. Pharmacy -->
+          <div
+            class="glass-panel p-6 rounded-premium border border-slate-200/80 dark:border-slate-800 text-left hover:shadow-xl hover:shadow-sky-600/10 transition-all group reveal"
+          >
+            <div
+              class="w-12 h-12 rounded-2xl bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 flex items-center justify-center mb-5 group-hover:bg-cyan-600 group-hover:text-white transition-colors"
+            >
+              <i data-lucide="pill" class="w-6 h-6"></i>
+            </div>
+            <h3
+              class="font-serif text-lg font-bold text-slate-900 dark:text-white mb-2"
+            >
+              Online Pharmacy
+            </h3>
+            <p
+              class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4"
+            >
+              Order genuine prescribed medicines online with fast door delivery
+              in Darbhanga &amp; neighboring towns.
+            </p>
+            <button
+              class="book-btn text-xs font-bold text-cyan-600 dark:text-cyan-400 flex items-center gap-1 hover:gap-2 transition-all cursor-pointer"
+              data-name="Pharmacy Delivery"
+            >
+              Order Medicines
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- 6. Health Packages -->
+          <div
+            class="glass-panel p-6 rounded-premium border border-slate-200/80 dark:border-slate-800 text-left hover:shadow-xl hover:shadow-sky-600/10 transition-all group reveal"
+            style="animation-delay: 0.05s"
+          >
+            <div
+              class="w-12 h-12 rounded-2xl bg-purple-100 dark:bg-purple-900/30 text-purple-600 flex items-center justify-center mb-5 group-hover:bg-purple-600 group-hover:text-white transition-colors"
+            >
+              <i data-lucide="activity" class="w-6 h-6"></i>
+            </div>
+            <h3
+              class="font-serif text-lg font-bold text-slate-900 dark:text-white mb-2"
+            >
+              Health Packages
+            </h3>
+            <p
+              class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4"
+            >
+              Affordable full-body health checkup packages for families, senior
+              citizens, and cardiac prevention.
+            </p>
+            <button
+              class="book-btn text-xs font-bold text-purple-600 dark:text-purple-400 flex items-center gap-1 hover:gap-2 transition-all cursor-pointer"
+              data-name="Health Packages"
+            >
+              View Packages
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- 7. Emergency Care -->
+          <div
+            class="glass-panel p-6 rounded-premium border border-slate-200/80 dark:border-slate-800 text-left hover:shadow-xl hover:shadow-sky-600/10 transition-all group reveal"
+            style="animation-delay: 0.1s"
+          >
+            <div
+              class="w-12 h-12 rounded-2xl bg-red-100 dark:bg-red-900/30 text-red-600 flex items-center justify-center mb-5 group-hover:bg-red-600 group-hover:text-white transition-colors"
+            >
+              <i data-lucide="siren" class="w-6 h-6"></i>
+            </div>
+            <h3
+              class="font-serif text-lg font-bold text-slate-900 dark:text-white mb-2"
+            >
+              Emergency Care
+            </h3>
+            <p
+              class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4"
+            >
+              Priority emergency bed reservation and doctor alert system for
+              critical cardiac and trauma cases.
+            </p>
+            <button
+              class="book-btn text-xs font-bold text-red-600 dark:text-red-400 flex items-center gap-1 hover:gap-2 transition-all cursor-pointer"
+              data-name="Emergency Care"
+            >
+              Emergency Hotline
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- 8. Digital Reports -->
+          <div
+            class="glass-panel p-6 rounded-premium border border-slate-200/80 dark:border-slate-800 text-left hover:shadow-xl hover:shadow-sky-600/10 transition-all group reveal"
+            style="animation-delay: 0.15s"
+          >
+            <div
+              class="w-12 h-12 rounded-2xl bg-teal-100 dark:bg-teal-900/30 text-teal-600 flex items-center justify-center mb-5 group-hover:bg-teal-600 group-hover:text-white transition-colors"
+            >
+              <i data-lucide="file-text" class="w-6 h-6"></i>
+            </div>
+            <h3
+              class="font-serif text-lg font-bold text-slate-900 dark:text-white mb-2"
+            >
+              Digital Reports
+            </h3>
+            <p
+              class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4"
+            >
+              Store and download your prescriptions, MRI scans, and blood test
+              PDFs anytime from your online dashboard.
+            </p>
+            <button
+              class="book-btn text-xs font-bold text-teal-600 dark:text-teal-400 flex items-center gap-1 hover:gap-2 transition-all cursor-pointer"
+              data-name="Digital Reports"
+            >
+              Access Dashboard
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. Why Choose Mushibat Healthcare -->
+    <section
+      id="about"
+      class="py-20 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-900"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+          <div
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-slate-900 dark:text-emerald-300 text-xs font-bold mb-3 border border-emerald-200 dark:border-slate-800"
+          >
+            <i
+              data-lucide="shield-check"
+              class="w-3.5 h-3.5 text-emerald-600"
+            ></i>
+            Trust &amp; Quality First
+          </div>
+          <h2
+            class="font-serif text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight"
+          >
+            Why Choose Mushibat Healthcare
+          </h2>
+          <p class="text-slate-600 dark:text-slate-400 text-sm sm:text-base">
+            Built specifically to eliminate long waiting queues and healthcare
+            transparency gaps across Bihar.
+          </p>
+        </div>
+
+        <!-- 8 Feature Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- 1. Verified Hospitals -->
+          <div
+            class="glass-panel p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-left flex items-start gap-4 reveal"
+          >
+            <div
+              class="w-12 h-12 rounded-xl bg-sky-100 dark:bg-slate-800 text-sky-600 flex items-center justify-center flex-shrink-0"
+            >
+              <i data-lucide="building-2" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h3
+                class="font-bold text-slate-900 dark:text-white text-base mb-1"
+              >
+                Verified Hospitals
+              </h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400">
+                Strict background checks on infrastructure and licensing.
+              </p>
+            </div>
+          </div>
+
+          <!-- 2. Verified Doctors -->
+          <div
+            class="glass-panel p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-left flex items-start gap-4 reveal"
+            style="animation-delay: 0.05s"
+          >
+            <div
+              class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-slate-800 text-emerald-600 flex items-center justify-center flex-shrink-0"
+            >
+              <i data-lucide="badge-check" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h3
+                class="font-bold text-slate-900 dark:text-white text-base mb-1"
+              >
+                Verified Doctors
+              </h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400">
+                MCI/NMC registered senior medical specialists.
+              </p>
+            </div>
+          </div>
+
+          <!-- 3. Instant Booking -->
+          <div
+            class="glass-panel p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-left flex items-start gap-4 reveal"
+            style="animation-delay: 0.1s"
+          >
+            <div
+              class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-slate-800 text-amber-600 flex items-center justify-center flex-shrink-0"
+            >
+              <i data-lucide="zap" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h3
+                class="font-bold text-slate-900 dark:text-white text-base mb-1"
+              >
+                Instant Booking
+              </h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400">
+                Instant appointment slip generated on SMS &amp; WhatsApp.
+              </p>
+            </div>
+          </div>
+
+          <!-- 4. Secure Payment -->
+          <div
+            class="glass-panel p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-left flex items-start gap-4 reveal"
+            style="animation-delay: 0.15s"
+          >
+            <div
+              class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-slate-800 text-purple-600 flex items-center justify-center flex-shrink-0"
+            >
+              <i data-lucide="credit-card" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h3
+                class="font-bold text-slate-900 dark:text-white text-base mb-1"
+              >
+                Secure Payment
+              </h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400">
+                Encrypted UPI, Cards, Netbanking &amp; Pay at Hospital option.
+              </p>
+            </div>
+          </div>
+
+          <!-- 5. Digital Prescription -->
+          <div
+            class="glass-panel p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-left flex items-start gap-4 reveal"
+          >
+            <div
+              class="w-12 h-12 rounded-xl bg-teal-100 dark:bg-slate-800 text-teal-600 flex items-center justify-center flex-shrink-0"
+            >
+              <i data-lucide="file-check" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h3
+                class="font-bold text-slate-900 dark:text-white text-base mb-1"
+              >
+                Digital Prescription
+              </h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400">
+                Clear readable e-prescriptions sent directly to your phone.
+              </p>
+            </div>
+          </div>
+
+          <!-- 6. Trusted by Patients -->
+          <div
+            class="glass-panel p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-left flex items-start gap-4 reveal"
+            style="animation-delay: 0.05s"
+          >
+            <div
+              class="w-12 h-12 rounded-xl bg-rose-100 dark:bg-slate-800 text-rose-600 flex items-center justify-center flex-shrink-0"
+            >
+              <i data-lucide="heart" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h3
+                class="font-bold text-slate-900 dark:text-white text-base mb-1"
+              >
+                Trusted by Patients
+              </h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400">
+                25,000+ satisfied families across the Mithila region.
+              </p>
+            </div>
+          </div>
+
+          <!-- 7. 24x7 Support -->
+          <div
+            class="glass-panel p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-left flex items-start gap-4 reveal"
+            style="animation-delay: 0.1s"
+          >
+            <div
+              class="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-slate-800 text-indigo-600 flex items-center justify-center flex-shrink-0"
+            >
+              <i data-lucide="headphones" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h3
+                class="font-bold text-slate-900 dark:text-white text-base mb-1"
+              >
+                24×7 Support
+              </h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400">
+                Regional customer support helpline in Maithili &amp; Hindi.
+              </p>
+            </div>
+          </div>
+
+          <!-- 8. Easy Cancellation -->
+          <div
+            class="glass-panel p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-left flex items-start gap-4 reveal"
+            style="animation-delay: 0.15s"
+          >
+            <div
+              class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 flex items-center justify-center flex-shrink-0"
+            >
+              <i data-lucide="refresh-cw" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h3
+                class="font-bold text-slate-900 dark:text-white text-base mb-1"
+              >
+                Easy Cancellation
+              </h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400">
+                One-click slot cancellation with instant refund processing.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. How It Works Section -->
+    <section class="py-20 bg-white dark:bg-slate-950">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+          <h2
+            class="font-serif text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight"
+          >
+            How It Works
+          </h2>
+          <p class="text-slate-600 dark:text-slate-400 text-sm sm:text-base">
+            Book your doctor consultation in 4 effortless steps.
+          </p>
+        </div>
+
+        <!-- 4 Steps Timeline -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+          <!-- Desktop Connecting Line -->
+          <div
+            class="hidden md:block absolute top-12 left-1/8 right-1/8 h-0.5 bg-gradient-to-r from-sky-500 via-emerald-500 to-sky-500 z-0"
+          ></div>
+
+          <!-- Step 1 -->
+          <div
+            class="flex flex-col items-center text-center relative z-10 reveal"
+          >
+            <div
+              class="w-20 h-20 rounded-2xl bg-white dark:bg-slate-900 border-2 border-sky-500 text-sky-600 font-serif font-extrabold text-2xl flex items-center justify-center shadow-lg mb-6"
+            >
+              1
+            </div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-lg mb-2">
+              Select District
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-[220px]">
+              Choose Darbhanga, Samastipur, Madhubani, or Sitamarhi.
+            </p>
+          </div>
+
+          <!-- Step 2 -->
+          <div
+            class="flex flex-col items-center text-center relative z-10 reveal"
+            style="animation-delay: 0.15s"
+          >
+            <div
+              class="w-20 h-20 rounded-2xl bg-white dark:bg-slate-900 border-2 border-emerald-500 text-emerald-600 font-serif font-extrabold text-2xl flex items-center justify-center shadow-lg mb-6"
+            >
+              2
+            </div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-lg mb-2">
+              Search Hospital or Doctor
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-[220px]">
+              Filter by medical specialty, OPD fees, and verified reviews.
+            </p>
+          </div>
+
+          <!-- Step 3 -->
+          <div
+            class="flex flex-col items-center text-center relative z-10 reveal"
+            style="animation-delay: 0.3s"
+          >
+            <div
+              class="w-20 h-20 rounded-2xl bg-white dark:bg-slate-900 border-2 border-amber-500 text-amber-600 font-serif font-extrabold text-2xl flex items-center justify-center shadow-lg mb-6"
+            >
+              3
+            </div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-lg mb-2">
+              Choose Date &amp; Time
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-[220px]">
+              Pick an available time slot that fits your schedule.
+            </p>
+          </div>
+
+          <!-- Step 4 -->
+          <div
+            class="flex flex-col items-center text-center relative z-10 reveal"
+            style="animation-delay: 0.45s"
+          >
+            <div
+              class="w-20 h-20 rounded-2xl bg-white dark:bg-slate-900 border-2 border-purple-500 text-purple-600 font-serif font-extrabold text-2xl flex items-center justify-center shadow-lg mb-6"
+            >
+              4
+            </div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-lg mb-2">
+              Confirm Booking
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-[220px]">
+              Pay online via UPI or choose Pay-at-Clinic &amp; skip queue.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. Testimonials Section -->
+    <section
+      class="py-20 bg-slate-50 dark:bg-slate-900/50 overflow-hidden border-t border-slate-100 dark:border-slate-900"
+    >
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 relative">
+        <div class="text-center mb-12 reveal">
+          <div
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-sky-100 text-sky-800 dark:bg-slate-800 dark:text-sky-300 text-xs font-bold mb-3 border border-sky-200 dark:border-slate-800"
+          >
+            <i
+              data-lucide="message-square"
+              class="w-3.5 h-3.5 text-sky-600"
+            ></i>
+            Local Patient Voices
+          </div>
+          <h2
+            class="font-serif text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight"
+          >
+            Trusted Across Mithila Region
+          </h2>
+        </div>
+
+        <!-- Testimonial Slider Wrapper -->
+        <div
+          class="relative min-h-[280px] flex items-center justify-center reveal"
+        >
+          <!-- Slide 1: Darbhanga -->
+          <div
+            class="testimonial-slide w-full transition-all duration-500 text-center"
+          >
+            <div class="flex justify-center gap-1 text-amber-500 mb-6">
+              <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+            </div>
+            <p
+              class="text-lg sm:text-xl md:text-2xl font-medium text-slate-700 dark:text-slate-200 italic leading-relaxed mb-8 max-w-2xl mx-auto"
+            >
+              "Earlier we used to wait in long lines for hours at DMCH OPD
+              counter. With Mushibat Healthcare, I booked Dr. Jha's appointment
+              online from my mobile in 2 minutes!"
+            </p>
+            <div class="flex items-center justify-center gap-3">
+              <div
+                class="w-12 h-12 rounded-full overflow-hidden bg-sky-100 border border-sky-200 dark:border-slate-700 flex items-center justify-center text-sky-700 font-bold"
+              >
+                RK
+              </div>
+              <div class="text-left">
+                <div class="font-bold text-slate-900 dark:text-white text-sm">
+                  Ramesh Kumar Jha
+                </div>
+                <div class="text-xs text-sky-600 dark:text-sky-400 font-medium">
+                  📍 Darbhanga
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 2: Samastipur -->
+          <div
+            class="testimonial-slide w-full transition-all duration-500 text-center hidden"
+          >
+            <div class="flex justify-center gap-1 text-amber-500 mb-6">
+              <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+            </div>
+            <p
+              class="text-lg sm:text-xl md:text-2xl font-medium text-slate-700 dark:text-slate-200 italic leading-relaxed mb-8 max-w-2xl mx-auto"
+            >
+              "My father needed urgent orthopedic consultation in Samastipur.
+              The online appointment slip was honored immediately by the
+              hospital staff. Excellent service!"
+            </p>
+            <div class="flex items-center justify-center gap-3">
+              <div
+                class="w-12 h-12 rounded-full overflow-hidden bg-emerald-100 border border-emerald-200 dark:border-slate-700 flex items-center justify-center text-emerald-700 font-bold"
+              >
+                VS
+              </div>
+              <div class="text-left">
+                <div class="font-bold text-slate-900 dark:text-white text-sm">
+                  Vikram Singh
+                </div>
+                <div
+                  class="text-xs text-emerald-600 dark:text-emerald-400 font-medium"
+                >
+                  📍 Samastipur
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 3: Madhubani -->
+          <div
+            class="testimonial-slide w-full transition-all duration-500 text-center hidden"
+          >
+            <div class="flex justify-center gap-1 text-amber-500 mb-6">
+              <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+            </div>
+            <p
+              class="text-lg sm:text-xl md:text-2xl font-medium text-slate-700 dark:text-slate-200 italic leading-relaxed mb-8 max-w-2xl mx-auto"
+            >
+              "Home blood sample collection in Madhubani was extremely smooth.
+              Digital reports arrived on WhatsApp the very next morning."
+            </p>
+            <div class="flex items-center justify-center gap-3">
+              <div
+                class="w-12 h-12 rounded-full overflow-hidden bg-amber-100 border border-amber-200 dark:border-slate-700 flex items-center justify-center text-amber-700 font-bold"
+              >
+                PS
+              </div>
+              <div class="text-left">
+                <div class="font-bold text-slate-900 dark:text-white text-sm">
+                  Pooja Sharma
+                </div>
+                <div
+                  class="text-xs text-amber-600 dark:text-amber-400 font-medium"
+                >
+                  📍 Madhubani
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 4: Sitamarhi -->
+          <div
+            class="testimonial-slide w-full transition-all duration-500 text-center hidden"
+          >
+            <div class="flex justify-center gap-1 text-amber-500 mb-6">
+              <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+            </div>
+            <p
+              class="text-lg sm:text-xl md:text-2xl font-medium text-slate-700 dark:text-slate-200 italic leading-relaxed mb-8 max-w-2xl mx-auto"
+            >
+              "Mushibat Healthcare is a gamechanger for Sitamarhi. Video
+              consultation with pediatric doctor saved us a trip during rainy
+              weather."
+            </p>
+            <div class="flex items-center justify-center gap-3">
+              <div
+                class="w-12 h-12 rounded-full overflow-hidden bg-purple-100 border border-purple-200 dark:border-slate-700 flex items-center justify-center text-purple-700 font-bold"
+              >
+                AK
+              </div>
+              <div class="text-left">
+                <div class="font-bold text-slate-900 dark:text-white text-sm">
+                  Anjali Kumari
+                </div>
+                <div
+                  class="text-xs text-purple-600 dark:text-purple-400 font-medium"
+                >
+                  📍 Sitamarhi
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <button
+            id="prev-testimonial"
+            class="absolute left-0 top-1/2 -translate-y-1/2 p-2.5 rounded-full border border-slate-200 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-all cursor-pointer shadow-sm"
+            aria-label="Previous Testimonial"
+          >
+            <i data-lucide="chevron-left" class="w-5 h-5"></i>
+          </button>
+          <button
+            id="next-testimonial"
+            class="absolute right-0 top-1/2 -translate-y-1/2 p-2.5 rounded-full border border-slate-200 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-all cursor-pointer shadow-sm"
+            aria-label="Next Testimonial"
+          >
+            <i data-lucide="chevron-right" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Slider Dots -->
+        <div class="flex justify-center gap-2 mt-8">
+          <button
+            class="slider-dot w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-700 transition-all active"
+            aria-label="Slide 1"
+          ></button>
+          <button
+            class="slider-dot w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-700 transition-all"
+            aria-label="Slide 2"
+          ></button>
+          <button
+            class="slider-dot w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-700 transition-all"
+            aria-label="Slide 3"
+          ></button>
+          <button
+            class="slider-dot w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-700 transition-all"
+            aria-label="Slide 4"
+          ></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. FAQ Section -->
+    <section id="contact" class="py-20 bg-white dark:bg-slate-950">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6">
+        <div class="text-center mb-16 reveal">
+          <div
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-sky-100 text-sky-800 dark:bg-slate-900 dark:text-sky-300 text-xs font-bold mb-3 border border-sky-200 dark:border-slate-800"
+          >
+            <i data-lucide="help-circle" class="w-3.5 h-3.5 text-sky-600"></i>
+            Help Center
+          </div>
+          <h2
+            class="font-serif text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight"
+          >
+            Frequently Asked Questions
+          </h2>
+          <p class="text-slate-600 dark:text-slate-400 text-sm sm:text-base">
+            Got questions about booking, payments, refunds, or reports? We are
+            here to help.
+          </p>
+        </div>
+
+        <div class="space-y-4 reveal">
+          <!-- FAQ 1: Appointment Booking -->
+          <div
+            class="faq-item glass-panel rounded-2xl overflow-hidden border border-slate-200/80 dark:border-slate-800 transition-all"
+          >
+            <button
+              class="faq-question w-full px-6 py-5 flex items-center justify-between text-left font-bold text-slate-900 dark:text-white focus:outline-none cursor-pointer text-sm sm:text-base"
+            >
+              <span class="flex items-center gap-2.5"
+                ><i data-lucide="calendar" class="w-4 h-4 text-sky-600"></i> How
+                do I book an appointment in Darbhanga, Samastipur, Madhubani or
+                Sitamarhi?</span
+              >
+              <i
+                data-lucide="chevron-down"
+                class="faq-icon text-slate-400 w-5 h-5 transition-transform duration-300"
+              ></i>
+            </button>
+            <div
+              class="faq-answer hidden px-6 pb-5 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed text-left border-t border-slate-100 dark:border-slate-800 pt-4"
+            >
+              Simply select your district from our search bar or district cards,
+              pick your preferred hospital or specialist doctor, select your
+              date &amp; time slot, and click Confirm. You will receive an
+              instant SMS and WhatsApp appointment slip.
+            </div>
+          </div>
+
+          <!-- FAQ 2: Payments -->
+          <div
+            class="faq-item glass-panel rounded-2xl overflow-hidden border border-slate-200/80 dark:border-slate-800 transition-all"
+          >
+            <button
+              class="faq-question w-full px-6 py-5 flex items-center justify-between text-left font-bold text-slate-900 dark:text-white focus:outline-none cursor-pointer text-sm sm:text-base"
+            >
+              <span class="flex items-center gap-2.5"
+                ><i
+                  data-lucide="credit-card"
+                  class="w-4 h-4 text-emerald-600"
+                ></i>
+                What payment methods are supported for consultation fees?</span
+              >
+              <i
+                data-lucide="chevron-down"
+                class="faq-icon text-slate-400 w-5 h-5 transition-transform duration-300"
+              ></i>
+            </button>
+            <div
+              class="faq-answer hidden px-6 pb-5 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed text-left border-t border-slate-100 dark:border-slate-800 pt-4"
+            >
+              We support all major Indian UPI apps (Google Pay, PhonePe, Paytm,
+              BHIM), Debit &amp; Credit Cards, Netbanking, as well as a
+              convenient 'Pay-at-Hospital Counter' option.
+            </div>
+          </div>
+
+          <!-- FAQ 3: Refund & Cancellation -->
+          <div
+            class="faq-item glass-panel rounded-2xl overflow-hidden border border-slate-200/80 dark:border-slate-800 transition-all"
+          >
+            <button
+              class="faq-question w-full px-6 py-5 flex items-center justify-between text-left font-bold text-slate-900 dark:text-white focus:outline-none cursor-pointer text-sm sm:text-base"
+            >
+              <span class="flex items-center gap-2.5"
+                ><i data-lucide="refresh-cw" class="w-4 h-4 text-amber-600"></i>
+                What is the cancellation and refund policy?</span
+              >
+              <i
+                data-lucide="chevron-down"
+                class="faq-icon text-slate-400 w-5 h-5 transition-transform duration-300"
+              ></i>
+            </button>
+            <div
+              class="faq-answer hidden px-6 pb-5 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed text-left border-t border-slate-100 dark:border-slate-800 pt-4"
+            >
+              You can cancel or reschedule any appointment up to 2 hours prior
+              to the OPD slot time from your account or SMS link. 100% of
+              prepaid fees will be refunded automatically to your bank account
+              within 24-48 hours.
+            </div>
+          </div>
+
+          <!-- FAQ 4: Video Consultation -->
+          <div
+            class="faq-item glass-panel rounded-2xl overflow-hidden border border-slate-200/80 dark:border-slate-800 transition-all"
+          >
+            <button
+              class="faq-question w-full px-6 py-5 flex items-center justify-between text-left font-bold text-slate-900 dark:text-white focus:outline-none cursor-pointer text-sm sm:text-base"
+            >
+              <span class="flex items-center gap-2.5"
+                ><i data-lucide="video" class="w-4 h-4 text-purple-600"></i> How
+                does Video Consultation work for patients in rural Bihar?</span
+              >
+              <i
+                data-lucide="chevron-down"
+                class="faq-icon text-slate-400 w-5 h-5 transition-transform duration-300"
+              ></i>
+            </button>
+            <div
+              class="faq-answer hidden px-6 pb-5 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed text-left border-t border-slate-100 dark:border-slate-800 pt-4"
+            >
+              Video consultation runs directly inside your web browser or
+              smartphone without requiring high bandwidth. Once booked, a direct
+              video room link is sent on SMS. After the video session, your
+              digital prescription is downloaded in 1-click.
+            </div>
+          </div>
+
+          <!-- FAQ 5: Digital Reports -->
+          <div
+            class="faq-item glass-panel rounded-2xl overflow-hidden border border-slate-200/80 dark:border-slate-800 transition-all"
+          >
+            <button
+              class="faq-question w-full px-6 py-5 flex items-center justify-between text-left font-bold text-slate-900 dark:text-white focus:outline-none cursor-pointer text-sm sm:text-base"
+            >
+              <span class="flex items-center gap-2.5"
+                ><i data-lucide="file-text" class="w-4 h-4 text-teal-600"></i>
+                How do I download my digital prescriptions and lab
+                reports?</span
+              >
+              <i
+                data-lucide="chevron-down"
+                class="faq-icon text-slate-400 w-5 h-5 transition-transform duration-300"
+              ></i>
+            </button>
+            <div
+              class="faq-answer hidden px-6 pb-5 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed text-left border-t border-slate-100 dark:border-slate-800 pt-4"
+            >
+              All prescriptions and laboratory test results are archived inside
+              your digital health records dashboard. You will also receive a
+              secure PDF link directly on your registered WhatsApp number.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13. Mobile App Promotion Section -->
+    <section
+      class="py-20 bg-slate-50 dark:bg-slate-900/50 overflow-hidden border-t border-slate-100 dark:border-slate-900"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          class="glass-panel rounded-premium p-8 sm:p-14 border border-white/50 dark:border-slate-800 bg-gradient-to-tr from-sky-500/10 via-white to-emerald-500/10 dark:from-sky-950/40 dark:via-slate-900 dark:to-emerald-950/40 relative"
+        >
+          <div class="grid lg:grid-cols-12 gap-12 items-center">
+            <!-- Text details -->
+            <div class="lg:col-span-7 text-left reveal-left">
+              <span
+                class="px-3.5 py-1.5 rounded-full bg-sky-100 dark:bg-slate-800 text-sky-700 dark:text-sky-300 text-xs font-bold mb-4 inline-block"
+                >🚀 Download Mushibat Healthcare App</span
+              >
+              <h2
+                class="font-serif text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-6 tracking-tight leading-tight"
+              >
+                Healthcare in Your Pocket Across Bihar
+              </h2>
+              <p
+                class="text-slate-600 dark:text-slate-400 leading-relaxed mb-8 max-w-lg text-sm sm:text-base"
+              >
+                Book appointments, call 24x7 emergency ambulances, consult
+                doctors on video, track lab samples, and store medical
+                prescriptions — all from the official Mushibat Healthcare App.
+              </p>
+
+              <div class="flex flex-wrap gap-4">
+                <!-- Google Play -->
+                <a
+                  href="#"
+                  class="flex items-center gap-3 bg-slate-900 hover:bg-sky-600 dark:bg-slate-800 dark:hover:bg-sky-600 text-white px-6 py-3.5 rounded-2xl shadow-lg transition-all transform hover:-translate-y-0.5"
+                >
+                  <i data-lucide="play" class="w-6 h-6 fill-white"></i>
+                  <div class="text-left">
+                    <div
+                      class="text-[10px] text-slate-300 uppercase font-bold tracking-wider"
+                    >
+                      GET IT ON
+                    </div>
+                    <div
+                      class="text-sm font-bold font-serif leading-none mt-0.5"
+                    >
+                      Google Play
+                    </div>
+                  </div>
+                </a>
+
+                <!-- App Store -->
+                <a
+                  href="#"
+                  class="flex items-center gap-3 bg-slate-900 hover:bg-sky-600 dark:bg-slate-800 dark:hover:bg-sky-600 text-white px-6 py-3.5 rounded-2xl shadow-lg transition-all transform hover:-translate-y-0.5"
+                >
+                  <i data-lucide="apple" class="w-6 h-6 fill-white"></i>
+                  <div class="text-left">
+                    <div
+                      class="text-[10px] text-slate-300 uppercase font-bold tracking-wider"
+                    >
+                      DOWNLOAD ON THE
+                    </div>
+                    <div
+                      class="text-sm font-bold font-serif leading-none mt-0.5"
+                    >
+                      App Store
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <!-- App Mockup Image -->
+            <div
+              class="lg:col-span-5 flex justify-center relative reveal-right"
+            >
+              <div
+                class="relative w-64 sm:w-72 aspect-[9/16] bg-slate-900 dark:bg-slate-950 rounded-[44px] border-8 border-slate-800 dark:border-slate-800 shadow-2xl p-3 overflow-hidden"
+              >
+                <!-- Phone notch -->
+                <div
+                  class="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-slate-800 rounded-b-2xl z-20"
+                ></div>
+
+                <!-- Screen content -->
+                <div
+                  class="w-full h-full bg-slate-50 dark:bg-slate-900 rounded-[32px] overflow-hidden flex flex-col pt-8 px-4 text-left relative"
+                >
+                  <!-- App header -->
+                  <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-1.5">
+                      <div
+                        class="w-6 h-6 rounded-lg bg-sky-600 flex items-center justify-center text-white text-xxs font-bold"
+                      >
+                        M
+                      </div>
+                      <span
+                        class="text-xs font-serif font-bold text-slate-900 dark:text-white"
+                        >Mushibat</span
+                      >
+                    </div>
+                    <span
+                      class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700"
+                      >Bihar</span
+                    >
+                  </div>
+
+                  <!-- Mini Search -->
+                  <div
+                    class="bg-white dark:bg-slate-800 rounded-xl p-2.5 flex items-center gap-2 border border-slate-200 dark:border-slate-700 text-xxs text-slate-400 mb-3 shadow-sm"
+                  >
+                    <i
+                      data-lucide="search"
+                      class="w-3.5 h-3.5 text-sky-600"
+                    ></i>
+                    Search Darbhanga, Samastipur...
+                  </div>
+
+                  <!-- District Banner -->
+                  <div
+                    class="bg-gradient-to-r from-sky-600 to-emerald-600 rounded-xl p-3 text-white mb-3 shadow-md"
+                  >
+                    <div class="text-[9px] font-bold uppercase opacity-90">
+                      Quick Booking
+                    </div>
+                    <div class="text-xs font-extrabold leading-tight mt-0.5">
+                      DMCH &amp; AIIMS Darbhanga OPD
+                    </div>
+                  </div>
+
+                  <!-- Doctor list mockup -->
+                  <div
+                    class="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-wider"
+                  >
+                    Top Regional Doctors
+                  </div>
+                  <div class="space-y-2">
+                    <div
+                      class="bg-white dark:bg-slate-800 rounded-xl p-2 flex items-center gap-2 border border-slate-100 dark:border-slate-700/80 shadow-xs"
+                    >
+                      <img
+                        src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=100"
+                        alt="Dr. Jha"
+                        class="w-8 h-8 rounded-lg object-cover"
+                      />
+                      <div class="flex-1">
+                        <div
+                          class="font-bold text-slate-900 dark:text-white text-xxs"
+                        >
+                          Dr. Rameshwar Jha
+                        </div>
+                        <div class="text-[9px] text-sky-600">
+                          Cardiology • Darbhanga
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="bg-white dark:bg-slate-800 rounded-xl p-2 flex items-center gap-2 border border-slate-100 dark:border-slate-700/80 shadow-xs"
+                    >
+                      <img
+                        src="https://images.unsplash.com/photo-1594824813573-246434de83fb?auto=format&fit=crop&q=80&w=100"
+                        alt="Dr. Mishra"
+                        class="w-8 h-8 rounded-lg object-cover"
+                      />
+                      <div class="flex-1">
+                        <div
+                          class="font-bold text-slate-900 dark:text-white text-xxs"
+                        >
+                          Dr. Sunita Mishra
+                        </div>
+                        <div class="text-[9px] text-sky-600">
+                          Gynecology • Madhubani
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14. Footer -->
+    <footer
+      class="bg-slate-950 text-slate-400 pt-20 pb-8 border-t border-slate-900"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-16 text-left"
+        >
+          <!-- Brand detail -->
+          <div class="lg:col-span-4">
+            <div class="flex items-center gap-2.5 mb-6">
+              <div
+                class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-emerald-500 flex items-center justify-center text-white font-extrabold text-xl shadow-md"
+              >
+                M
+              </div>
+              <span
+                class="font-serif text-2xl font-bold tracking-tight text-white"
+              >
+                Mushibat Healthcare
+              </span>
+            </div>
+            <p class="text-xs sm:text-sm leading-relaxed mb-6 text-slate-400">
+              Bihar's premier online hospital appointment booking
+              platform. Connecting patients in Darbhanga, Samastipur, Madhubani,
+              and Sitamarhi to certified medical institutions and doctors.
+            </p>
+            <div class="flex gap-3">
+              <a
+                href="#"
+                class="p-2.5 rounded-xl bg-slate-900 hover:bg-sky-600 text-white transition-colors"
+                aria-label="Facebook"
+                ><i data-lucide="facebook" class="w-4 h-4"></i
+              ></a>
+              <a
+                href="#"
+                class="p-2.5 rounded-xl bg-slate-900 hover:bg-sky-600 text-white transition-colors"
+                aria-label="Twitter"
+                ><i data-lucide="twitter" class="w-4 h-4"></i
+              ></a>
+              <a
+                href="#"
+                class="p-2.5 rounded-xl bg-slate-900 hover:bg-sky-600 text-white transition-colors"
+                aria-label="Instagram"
+                ><i data-lucide="instagram" class="w-4 h-4"></i
+              ></a>
+              <a
+                href="#"
+                class="p-2.5 rounded-xl bg-slate-900 hover:bg-sky-600 text-white transition-colors"
+                aria-label="Linkedin"
+                ><i data-lucide="linkedin" class="w-4 h-4"></i
+              ></a>
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div class="lg:col-span-2">
+            <h4
+              class="text-xs font-bold uppercase tracking-wider text-white mb-6"
+            >
+              Quick Links
+            </h4>
+            <ul class="space-y-3 text-xs sm:text-sm">
+              <li>
+                <a href="#home" class="hover:text-sky-400 transition-colors"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#districts"
+                  class="hover:text-sky-400 transition-colors"
+                  >Districts</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#hospitals"
+                  class="hover:text-sky-400 transition-colors"
+                  >Hospitals</a
+                >
+              </li>
+              <li>
+                <a href="#doctors" class="hover:text-sky-400 transition-colors"
+                  >Doctors</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#specialties"
+                  class="hover:text-sky-400 transition-colors"
+                  >Specialties</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Operational Districts -->
+          <div class="lg:col-span-2">
+            <h4
+              class="text-xs font-bold uppercase tracking-wider text-white mb-6"
+            >
+              Districts
+            </h4>
+            <ul class="space-y-3 text-xs sm:text-sm">
+              <li>
+                <a
+                  href="#districts"
+                  class="hover:text-sky-400 transition-colors"
+                  >Darbhanga (DMCH)</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#districts"
+                  class="hover:text-sky-400 transition-colors"
+                  >Samastipur Sadar</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#districts"
+                  class="hover:text-sky-400 transition-colors"
+                  >Madhubani Central</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#districts"
+                  class="hover:text-sky-400 transition-colors"
+                  >Sitamarhi Care</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#districts"
+                  class="hover:text-sky-400 transition-colors"
+                  >AIIMS Darbhanga</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Contact Detail -->
+          <div class="lg:col-span-4">
+            <h4
+              class="text-xs font-bold uppercase tracking-wider text-white mb-6"
+            >
+              Contact Helpline
+            </h4>
+            <ul class="space-y-4 text-xs sm:text-sm">
+              <li class="flex items-start gap-3">
+                <i
+                  data-lucide="map-pin"
+                  class="w-5 h-5 text-sky-500 flex-shrink-0 mt-0.5"
+                ></i>
+                <span
+                  >Tower Chowk, Near DMCH Main Gate, Darbhanga, Bihar
+                  846004</span
+                >
+              </li>
+              <li class="flex items-center gap-3">
+                <i
+                  data-lucide="phone"
+                  class="w-5 h-5 text-sky-500 flex-shrink-0"
+                ></i>
+                <span>+91 98765 43210 / 1800-MUSHIBAT</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <i
+                  data-lucide="mail"
+                  class="w-5 h-5 text-sky-500 flex-shrink-0"
+                ></i>
+                <span>support@mushibat.care</span>
+              </li>
+            </ul>
+
+            <!-- Newsletter Subscription Form -->
+            <div class="mt-6 pt-5 border-t border-slate-900">
+              <h5 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <i data-lucide="bell" class="w-3.5 h-3.5 text-sky-400"></i>
+                Get Daily OPD &amp; Health Alerts
+              </h5>
+              <form id="newsletter-form" class="flex gap-2">
+                <input
+                  type="email"
+                  id="newsletter-email"
+                  required
+                  placeholder="Enter your email"
+                  class="bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 flex-1"
+                />
+                <button
+                  type="submit"
+                  id="newsletter-submit-btn"
+                  class="bg-sky-600 hover:bg-sky-700 text-white font-bold px-4 py-2 rounded-xl text-xs transition-all flex items-center gap-1 cursor-pointer"
+                >
+                  <span>Subscribe</span>
+                  <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="h-px bg-slate-900 mb-8"></div>
+        <div
+          class="flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-500"
+        >
+          <div>
+            &copy; 2026 Mushibat Healthcare Pvt Ltd. All rights reserved.
+            Bihar (Mithila Region).
+          </div>
+          <div class="flex gap-6">
+            <a href="#" class="hover:text-white transition-colors"
+              >Privacy Policy</a
+            >
+            <a href="#" class="hover:text-white transition-colors"
+              >Terms &amp; Conditions</a
+            >
+            <a href="#" class="hover:text-white transition-colors"
+              >Refund Policy</a
+            >
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- 15. Live Chat Widget & WhatsApp Button -->
+    <div class="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3">
+      <!-- Chat window frame -->
+      <div
+        id="chat-window"
+        class="chat-window w-80 sm:w-96 h-[460px] rounded-2xl glass-panel shadow-2xl border border-white/40 dark:border-slate-800 flex flex-col overflow-hidden"
+      >
+        <!-- Chat Header -->
+        <div
+          class="bg-gradient-to-r from-sky-600 to-sky-700 p-4 text-white flex items-center justify-between"
+        >
+          <div class="flex items-center gap-2.5">
+            <div
+              class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"
+            >
+              <i data-lucide="message-square" class="w-4 h-4"></i>
+            </div>
+            <div class="text-left">
+              <div class="font-bold text-xs">Mushibat Assistant (Mithila)</div>
+              <div class="text-[10px] opacity-80">Online • Live Support</div>
+            </div>
+          </div>
+          <button
+            id="close-chat"
+            class="p-1 rounded hover:bg-white/10 transition-colors cursor-pointer"
+            aria-label="Close Chat"
+          >
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Messages body -->
+        <div
+          id="chat-messages"
+          class="flex-1 p-4 overflow-y-auto flex flex-col gap-3 text-xs"
+        >
+          <div
+            class="self-start bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-2xl p-3 max-w-[85%] text-left border border-slate-200 dark:border-slate-700"
+          >
+            Namaste! 🙏 Welcome to Mushibat Healthcare. How can I assist you
+            with hospital booking in Darbhanga, Samastipur, Madhubani or
+   
+            Sitamarhi today?
+          </div>
+        </div>
+
+        <!-- Input Form -->
+        <form
+          id="chat-form"
+          class="p-3 border-t border-slate-200 dark:border-slate-800 flex gap-2 bg-white/50 dark:bg-slate-900/50"
+        >
+          <input
+            type="text"
+            id="chat-input"
+            placeholder="Type doctor or district question..."
+            class="flex-1 px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:border-sky-500 text-slate-800 dark:text-slate-100"
+          />
+          <button
+            type="submit"
+            class="p-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white shadow shadow-sky-600/20 transition-colors cursor-pointer"
+            aria-label="Send Message"
+          >
+            <i data-lucide="send" class="w-4 h-4"></i>
+          </button>
+        </form>
+      </div>
+
+      <!-- Trigger Buttons -->
+      <div class="flex items-center gap-3">
+        <!-- Back to top button -->
+        <button
+          id="back-to-top"
+          class="w-12 h-12 rounded-full bg-slate-800/90 hover:bg-slate-900 text-white flex items-center justify-center shadow-lg transition-all cursor-pointer opacity-0 pointer-events-none"
+          aria-label="Back to top"
+        >
+          <i data-lucide="arrow-up" class="w-5 h-5"></i>
+        </button>
+
+        <!-- Floating WhatsApp button -->
+        <button
+          id="whatsapp-btn"
+          class="w-14 h-14 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center shadow-lg shadow-emerald-600/30 hover:shadow-xl transition-all transform hover:-translate-y-1 animate-whatsapp-pulse cursor-pointer"
+          aria-label="Chat on WhatsApp"
+        >
+          <i data-lucide="phone" class="w-6 h-6"></i>
+        </button>
+
+        <!-- Live Chat trigger button -->
+        <button
+          id="chat-toggle"
+          class="w-14 h-14 rounded-full bg-sky-600 hover:bg-sky-700 text-white flex items-center justify-center shadow-lg shadow-sky-600/30 hover:shadow-xl transition-all transform hover:-translate-y-1 cursor-pointer"
+          aria-label="Toggle Live Chat"
+        >
+          <i data-lucide="message-circle" class="w-6 h-6"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- 16. Appointment Booking Multi-Step Modal -->
+    <div
+      id="booking-modal"
+      class="fixed inset-0 z-999 bg-slate-950/70 backdrop-blur-sm hidden items-center justify-center p-4"
+    >
+      <div
+        class="glass-panel w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl border border-white/40 dark:border-slate-800 flex flex-col text-left"
+      >
+        <!-- Modal Header -->
+        <div
+          class="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-sky-600/10 dark:bg-slate-800/50"
+        >
+          <div class="flex items-center gap-2">
+            <i data-lucide="calendar-check-2" class="w-5 h-5 text-sky-600"></i>
+            <h3
+              id="modal-title"
+              class="font-serif text-lg font-bold text-slate-900 dark:text-white"
+            >
+              Book OPD Appointment
+            </h3>
+          </div>
+          <button
+            id="close-modal"
+            class="p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+            aria-label="Close Modal"
+          >
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Step 1: Patient & Appointment Details -->
+        <div id="booking-details-panel" class="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+          <!-- Appointment Type -->
+          <div>
+            <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-wider">Select Appointment Type</label>
+            <div class="grid grid-cols-2 gap-3">
+              <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-sky-500 transition-colors bg-white dark:bg-slate-850">
+                <input type="radio" name="appointment-type" value="Normal Health Checkup" checked class="text-sky-600 focus:ring-sky-500">
+                <span class="text-xs font-bold text-slate-700 dark:text-slate-200">🩺 Normal Checkup</span>
+              </label>
+              <label class="flex items-center gap-2.5 p-3 rounded-xl border border-red-200 dark:border-red-900/40 cursor-pointer hover:border-red-500 transition-colors bg-red-50/20 dark:bg-red-950/10">
+                <input type="radio" name="appointment-type" value="Emergency" class="text-red-600 focus:ring-red-500">
+                <span class="text-xs font-bold text-red-600 dark:text-red-400">🚨 Emergency Care</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Full Name -->
+          <div>
+            <label for="patient-fullname" class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Full Name</label>
+            <input type="text" id="patient-fullname" required placeholder="e.g. Ramesh Kumar Jha" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500">
+          </div>
+
+          <!-- Date of Birth -->
+          <div>
+            <label for="patient-dob" class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Date of Birth</label>
+            <input type="date" id="patient-dob" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500 cursor-pointer">
+          </div>
+
+          <!-- District -->
+          <div>
+            <label for="booking-district" class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wider">District</label>
+            <select id="booking-district" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500 cursor-pointer">
+              <option value="Darbhanga">Darbhanga</option>
+              <option value="Samastipur">Samastipur</option>
+              <option value="Madhubani">Madhubani</option>
+              <option value="Sitamarhi">Sitamarhi</option>
+            </select>
+          </div>
+
+          <!-- Hospital Name -->
+          <div>
+            <label for="booking-hospital" class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Hospital Name</label>
+            <select id="booking-hospital" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500 cursor-pointer">
+              <!-- Dynamically loaded in JS -->
+            </select>
+          </div>
+
+          <div class="h-px bg-slate-200 dark:bg-slate-800 my-2"></div>
+
+          <!-- Continue Button -->
+          <button
+            type="button"
+            id="btn-continue-to-payment"
+            class="w-full bg-gradient-to-r from-sky-600 to-emerald-600 hover:from-sky-700 hover:to-emerald-700 text-white font-bold py-3.5 rounded-xl text-xs transition-all shadow-md shadow-sky-600/20 flex items-center justify-center gap-2 cursor-pointer transform hover:-translate-y-0.5"
+          >
+            Continue to Payment <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Step 2: Secure Payment Panel -->
+        <div id="booking-payment-panel" class="p-6 space-y-5 hidden">
+          <!-- Summary Header -->
+          <div class="bg-sky-50 dark:bg-slate-850 p-4 rounded-xl border border-sky-100 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 space-y-2">
+            <h4 class="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-xxs">Booking Summary</h4>
+            <div class="grid grid-cols-2 gap-y-1.5">
+              <span>Patient Name:</span> <strong id="summary-name" class="text-slate-900 dark:text-white"></strong>
+              <span>Type:</span> <strong id="summary-type" class="text-slate-900 dark:text-white"></strong>
+              <span>Hospital:</span> <strong id="summary-hospital" class="text-slate-900 dark:text-white"></strong>
+              <span>District:</span> <strong id="summary-district" class="text-slate-900 dark:text-white"></strong>
+            </div>
+            <div class="h-px bg-slate-200 dark:bg-slate-800 my-2"></div>
+            <div class="flex justify-between items-center text-sm font-bold text-slate-900 dark:text-white">
+              <span>Consultation Fee:</span>
+              <span id="summary-price" class="text-emerald-600 dark:text-emerald-400 text-base">₹500</span>
+            </div>
+          </div>
+
+          <!-- Payment Options -->
+          <div class="space-y-3">
+            <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Select Payment Method</label>
+            <div class="grid grid-cols-2 gap-3 text-xs">
+              <label class="flex items-center gap-2.5 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-sky-500 transition-colors bg-white dark:bg-slate-850">
+                <input type="radio" name="payment-method" value="PhonePe" checked class="text-sky-600 focus:ring-sky-500">
+                <span class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1">🟣 PhonePe</span>
+              </label>
+              <label class="flex items-center gap-2.5 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-sky-500 transition-colors bg-white dark:bg-slate-850">
+                <input type="radio" name="payment-method" value="Google Pay" class="text-sky-600 focus:ring-sky-500">
+                <span class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1">🔵 Google Pay</span>
+              </label>
+              <label class="flex items-center gap-2.5 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-sky-500 transition-colors bg-white dark:bg-slate-850">
+                <input type="radio" name="payment-method" value="Paytm" class="text-sky-600 focus:ring-sky-500">
+                <span class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1">🔵 Paytm</span>
+              </label>
+              <label class="flex items-center gap-2.5 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-sky-500 transition-colors bg-white dark:bg-slate-850">
+                <input type="radio" name="payment-method" value="UPI ID" class="text-sky-600 focus:ring-sky-500">
+                <span class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1">🟢 UPI ID</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Conditional UPI Input -->
+          <div id="upi-input-container" class="hidden">
+            <label for="upi-id" class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Enter UPI ID</label>
+            <input type="text" id="upi-id" placeholder="username@upi" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500">
+          </div>
+
+          <!-- Buttons -->
+          <div class="grid grid-cols-3 gap-3">
+            <button
+              type="button"
+              id="btn-back-to-details"
+              class="col-span-1 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-semibold py-3.5 rounded-xl text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer text-center"
+            >
+              Back
+            </button>
+            <button
+              type="button"
+              id="btn-pay-and-confirm"
+              class="col-span-2 bg-gradient-to-r from-sky-600 to-emerald-600 hover:from-sky-700 hover:to-emerald-700 text-white font-bold py-3.5 rounded-xl text-xs transition-all shadow-md shadow-sky-600/20 flex items-center justify-center gap-1.5 cursor-pointer transform hover:-translate-y-0.5"
+            >
+              <i data-lucide="shield-check" class="w-4 h-4"></i> Pay &amp; Confirm
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 3: Loader Panel -->
+        <div id="booking-loader-panel" class="p-12 flex flex-col items-center justify-center space-y-4 text-center hidden">
+          <div class="spinner"></div>
+          <p class="text-sm font-bold text-slate-700 dark:text-slate-300 animate-pulse">Processing Secure Payment...</p>
+          <p class="text-xxs text-slate-400">Do not refresh or close this modal window.</p>
+        </div>
+
+        <!-- Step 4: Success Confirmation Panel -->
+        <div id="booking-confirmation-panel" class="p-8 flex flex-col items-center text-center space-y-6 hidden">
+          <div class="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-950/30 text-emerald-600 flex items-center justify-center shadow-lg border border-emerald-200">
+            <i data-lucide="check" class="w-10 h-10"></i>
+          </div>
+          
+          <div class="space-y-1">
+            <h3 class="font-serif text-xl font-bold text-slate-900 dark:text-white">Appointment Booked!</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Your transaction has been processed successfully.</p>
+          </div>
+
+          <!-- Summary list -->
+          <div class="w-full bg-slate-50 dark:bg-slate-900/60 p-4 rounded-xl border border-slate-100 dark:border-slate-800 text-left text-xs space-y-2">
+            <div class="flex justify-between"><span class="text-slate-400">Booking ID:</span> <strong id="conf-id" class="text-slate-800 dark:text-white"></strong></div>
+            <div class="flex justify-between"><span class="text-slate-400">Patient:</span> <strong id="conf-name" class="text-slate-800 dark:text-white"></strong></div>
+            <div class="flex justify-between"><span class="text-slate-400">DOB:</span> <strong id="conf-dob" class="text-slate-800 dark:text-white"></strong></div>
+            <div class="flex justify-between"><span class="text-slate-400">Type:</span> <strong id="conf-type" class="text-slate-800 dark:text-white"></strong></div>
+            <div class="flex justify-between"><span class="text-slate-400">Hospital:</span> <strong id="conf-hospital" class="text-slate-800 dark:text-white"></strong></div>
+            <div class="flex justify-between"><span class="text-slate-400">District:</span> <strong id="conf-district" class="text-slate-800 dark:text-white"></strong></div>
+            <div class="flex justify-between"><span class="text-slate-400">Payment status:</span> <strong class="text-emerald-600 dark:text-emerald-400">Paid (Online)</strong></div>
+          </div>
+
+          <div class="flex flex-col gap-3 w-full">
+            <button
+              type="button"
+              id="btn-download-pdf"
+              class="w-full bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800 text-white font-bold py-3 rounded-xl text-xs transition-all shadow-md shadow-sky-600/20 flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <i data-lucide="file-down" class="w-4 h-4"></i> Download PDF Receipt
+            </button>
+            <button
+              type="button"
+              id="btn-close-success"
+              class="w-full border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-semibold py-3 rounded-xl text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            >
+              Done &amp; Close
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 17. Interactive Login Modal -->
+    <div
+      id="login-modal"
+      class="fixed inset-0 z-999 bg-slate-950/70 backdrop-blur-sm hidden items-center justify-center p-4"
+    >
+      <div
+        class="glass-panel w-full max-w-md rounded-2xl overflow-hidden shadow-2xl border border-white/40 dark:border-slate-800 flex flex-col text-left"
+      >
+        <!-- Modal Header -->
+        <div
+          class="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-sky-600/10 dark:bg-slate-800/50"
+        >
+          <div class="flex items-center gap-2">
+            <i data-lucide="log-in" class="w-5 h-5 text-sky-600"></i>
+            <h3
+              class="font-serif text-lg font-bold text-slate-900 dark:text-white"
+            >
+              Secure Patient Login
+            </h3>
+          </div>
+          <button
+            id="close-login-modal"
+            class="p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-650 transition-colors cursor-pointer"
+            aria-label="Close Login Modal"
+          >
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Tab Switchers -->
+        <div
+          class="flex border-b border-slate-200 dark:border-slate-800 text-xs font-bold uppercase tracking-wider"
+        >
+          <button
+            id="tab-mobile-btn"
+            class="flex-1 py-4 text-center border-b-2 border-sky-600 text-sky-600 cursor-pointer"
+          >
+            📱 Mobile Number
+          </button>
+          <button
+            id="tab-email-btn"
+            class="flex-1 py-4 text-center border-b-2 border-transparent text-slate-400 hover:text-slate-600 cursor-pointer"
+          >
+            ✉️ Email Address
+          </button>
+        </div>
+
+        <!-- Tab Forms Container -->
+        <div class="p-6">
+          <!-- Mobile Form -->
+          <form id="mobile-login-form" class="space-y-4">
+            <!-- Step A: Enter Mobile -->
+            <div id="mobile-input-step">
+              <label
+                for="login-mobile"
+                class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wider"
+                >Enter Mobile Number</label
+              >
+              <div class="relative">
+                <span
+                  class="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400"
+                  >+91</span
+                >
+                <input
+                  type="tel"
+                  id="login-mobile"
+                  required
+                  placeholder="98765 43210"
+                  maxlength="10"
+                  class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl pl-12 pr-4 py-3 text-sm text-slate-900 dark:text-slate-100 font-semibold tracking-wider focus:outline-none focus:border-sky-500"
+                />
+              </div>
+              <button
+                type="button"
+                id="send-mobile-otp"
+                class="w-full mt-4 bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-xl text-xs transition-all shadow-md shadow-sky-600/20 flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <i data-lucide="send" class="w-4 h-4"></i> Get OTP Code
+              </button>
+            </div>
+
+            <!-- Step B: Enter OTP (Hidden by default) -->
+            <div id="mobile-otp-step" class="hidden space-y-4">
+              <div
+                class="text-xs text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/30 p-3 rounded-xl border border-emerald-100 dark:border-emerald-900 flex items-center gap-2"
+              >
+                <i data-lucide="check-circle" class="w-4 h-4"></i> OTP Code sent
+                to your mobile number!
+              </div>
+              <div>
+                <label
+                  for="login-mobile-otp"
+                  class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wider"
+                  >Enter 4-Digit OTP</label
+                >
+                <input
+                  type="text"
+                  id="login-mobile-otp"
+                  placeholder="Enter OTP (e.g. 1234)"
+                  maxlength="4"
+                  class="w-full text-center bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-3 text-lg font-bold tracking-widest text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500"
+                />
+              </div>
+              <div
+                class="flex justify-between items-center text-xxs font-bold text-slate-400"
+              >
+                <span>Didn't receive OTP?</span>
+                <button
+                  type="button"
+                  id="resend-mobile-otp"
+                  class="text-sky-600 hover:underline"
+                >
+                  Resend OTP
+                </button>
+              </div>
+              <button
+                type="submit"
+                class="w-full bg-gradient-to-r from-sky-600 to-emerald-600 hover:from-sky-700 hover:to-emerald-700 text-white font-bold py-3.5 rounded-xl text-xs transition-all shadow-md shadow-sky-600/20 flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <i data-lucide="shield-check" class="w-4 h-4"></i> Verify &amp;
+                Login
+              </button>
+            </div>
+          </form>
+
+          <!-- Email Form (Hidden by default) -->
+          <form id="email-login-form" class="space-y-4 hidden">
+            <!-- Step A: Enter Email -->
+            <div id="email-input-step">
+              <label
+                for="login-email"
+                class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wider"
+                >Enter Email Address</label
+              >
+              <div class="relative">
+                <i
+                  data-lucide="mail"
+                  class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4"
+                ></i>
+                <input
+                  type="email"
+                  id="login-email"
+                  placeholder="name@example.com"
+                  class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500"
+                />
+              </div>
+              <button
+                type="button"
+                id="send-email-otp"
+                class="w-full mt-4 bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-xl text-xs transition-all shadow-md shadow-sky-600/20 flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <i data-lucide="send" class="w-4 h-4"></i> Get OTP Code
+              </button>
+            </div>
+
+            <!-- Step B: Enter OTP (Hidden by default) -->
+            <div id="email-otp-step" class="hidden space-y-4">
+              <div
+                class="text-xs text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/30 p-3 rounded-xl border border-emerald-100 dark:border-emerald-900 flex items-center gap-2"
+              >
+                <i data-lucide="check-circle" class="w-4 h-4"></i> OTP Code sent
+                to your email address!
+              </div>
+              <div>
+                <label
+                  for="login-email-otp"
+                  class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wider"
+                  >Enter 4-Digit OTP</label
+                >
+                <input
+                  type="text"
+                  id="login-email-otp"
+                  placeholder="Enter OTP (e.g. 1234)"
+                  maxlength="4"
+                  class="w-full text-center bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-3 text-lg font-bold tracking-widest text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500"
+                />
+              </div>
+              <div
+                class="flex justify-between items-center text-xxs font-bold text-slate-400"
+              >
+                <span>Didn't receive code?</span>
+                <button
+                  type="button"
+                  id="resend-email-otp"
+                  class="text-sky-600 hover:underline"
+                >
+                  Resend Code
+                </button>
+              </div>
+              <button
+                type="submit"
+                class="w-full bg-gradient-to-r from-sky-600 to-emerald-600 hover:from-sky-700 hover:to-emerald-700 text-white font-bold py-3.5 rounded-xl text-xs transition-all shadow-md shadow-sky-600/20 flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <i data-lucide="shield-check" class="w-4 h-4"></i> Verify &amp;
+                Login
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main JS script -->
+    <script type="module" src="./app.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        if (window.lucide) {
+          window.lucide.createIcons();
+        }
+
+        // Special mobile theme toggle
+        const darkToggleMobile = document.getElementById(
+          "dark-mode-toggle-mobile",
+        );
+        if (darkToggleMobile) {
+          darkToggleMobile.addEventListener("click", () => {
+            document.documentElement.classList.toggle("dark");
+            const currentlyDark =
+              document.documentElement.classList.contains("dark");
+            localStorage.setItem("theme", currentlyDark ? "dark" : "light");
+            if (window.showToast) {
+              window.showToast(
+                currentlyDark
+                  ? "Dark Mode Enabled 🌙"
+                  : "Light Mode Enabled ☀️",
+              );
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
